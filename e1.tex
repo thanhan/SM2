@@ -69,7 +69,29 @@ p(\theta| x_1, \ldots, x_N) &\propto p(x_1, \ldots, x_N | \theta) p(\theta)\\
 &=\exp\left( \frac{-\sum_i x_i^2+2\sum_i x_i\theta - N\theta^2}{2\sigma^2} \right) \exp\left( \frac{-\theta^2 + 2\theta m - m^2}{2v} \right)\\
 &= \exp \left( -\theta^2\left(\frac{N}{2\sigma^2} + \frac{1}{2v} \right) + \theta\left(\frac{\sum_ix_i}{\sigma^2} + \frac{m}{v}\right) - \frac{\sum_ix_i^2}{2\sigma^2} - \frac{m^2}{2v} \right)
 \end{align*}
-We then complete the square:
+We then complete the square by setting the posterior to:
+
+\begin{align*}
+&=\exp \left[ -a\left(\theta^2 -2b\theta + b^2\right) \right]\\
+&=\exp \left[ -a\left(\theta - b\right)^2 \right]\\
+&=\exp \left[ -\frac{(\theta - b)^2}{2(1/(2a))} \right]\\
+\end{align*}
+
+
+We calculate \(a, b\) by matching coefficients:
+
+\begin{align*}
+a &= \frac{N}{2\sigma^2} + \frac{1}{2v} = \frac{Nv + \sigma^2}{2\sigma^2v}\\
+2ab &= \frac{\sum_ix_i}{\sigma^2} + \frac{m}{v}\\
+\implies b &= \frac{v\sum_ix_i + m\sigma^2}{v\sigma^2} \frac{\sigma^2v}{Nv + \sigma^2}\\
+&=\frac{v\sum_ix_i + m\sigma^2}{Nv + \sigma^2}
+\end{align*}
+
+The posterior is then:
+\begin{align*}
+&\mbox{N}(b, 1/(2a))\\
+=&\mbox{N}\left(\frac{v\sum_ix_i + m\sigma^2}{Nv + \sigma^2}, \frac{\sigma^2v}{Nv + \sigma^2} \right)
+\end{align*}
 
 \subsection*{D}
 \begin{align*}
@@ -84,6 +106,29 @@ p(\sigma^2\mid x_1, \ldots, x_N) = \mbox{IG}\left(a+\frac{N}{2}, b + \frac{\sum_
 \end{align*}
 
 \subsection*{E}
+The posterior is:
+\begin{align*}
+p(\theta| x_1, \ldots, x_N) &\propto p(x_1, \ldots, x_N | \theta) p(\theta)\\
+&=\prod_{i=1}^N \mbox{N}(x_i; \theta, \sigma_i^2) \mbox{N}(\theta; m, v)\\
+&\propto \prod_{i=1}^N \exp\left( -\frac{(x_i-\theta)^2}{2\sigma_i^2} \right) \exp\left( -\frac{(\theta - m)^2}{2v} \right)\\
+&= \exp\left( -\sum_{i=1}^n\frac{(x_i-\theta)^2}{2\sigma_i^2}  -\frac{(\theta - m)^2}{2v} \right)\\
+&= \exp\left[ -\frac{1}{2}\left( \sum_{i=1}^n\frac{(x_i-\theta)^2}{\sigma_i^2} + \frac{(\theta - m)^2}{v}\right) \right]\\
+&= \exp\left[ -\frac{1}{2}\left( \sum_{i=1}^n\frac{x_i^2}{\sigma_i^2} + \sum_{i=1}^n\frac{-2x_i\theta}{\sigma_i^2} + \sum_{i=1}^n\frac{\theta^2}{\sigma_i^2}  + \frac{\theta^2 - 2\theta m + m^2}{v} \right)\right]\\
+&=\exp\left\lbrace -\frac{1}{2}\left[  \theta^2\left( \sum_{i=1}^n\frac{1}{\sigma_i^2} + \frac{1}{v} \right) -2 \theta\left(\sum_{i=1}^N\frac{x_i}{\sigma_i^2} + \frac{m}{v}\right) + \sum_{i=1}^n\frac{x_i^2}{\sigma_i^2} + \frac{m^2}{v} \right] \right\rbrace\\
+\text{set }  &= \exp\left\lbrace -\frac{1}{2}\left[a(\theta^2 -2\theta b + b^2) \right] \right\rbrace\\
+&= \exp\left\lbrace -\frac{1}{2}\left[\frac{(\theta-b)^2}{1/a} \right] \right\rbrace\\
+\end{align*}
+
+Matching the coefficients, we have:
+\begin{align*}
+a &= \sum_{i=1}^n\frac{1}{\sigma_i^2} + \frac{1}{v}\\
+b &= \left(\sum_{i=1}^N\frac{x_i}{\sigma_i^2} + \frac{m}{v} \right) / \left( \sum_{i=1}^n\frac{1}{\sigma_i^2} + \frac{1}{v}\right)
+\end{align*}
+
+The posterior is:
+\begin{align*}
+\mbox{N}(b, 1/a)
+\end{align*}
 
 \subsection*{F}
 \begin{align*}
@@ -94,4 +139,51 @@ p(x) &= \int_{0}^{\infty} p(x\mid \sigma^2) p(\sigma^2) d\sigma^2\\
 &= \frac{\Gamma(a+1/2)}{(b+x^2/2)^{a+1/2}}\\
 &\propto \frac{\Gamma(\frac{2a+1}{2})}{(1 + \frac{x^2/2}{b})^{a+1/2}}
 \end{align*}
+
+
+
+\section{The multivariate normal distribution}
+\subsection*{A}
+\begin{align*}
+\mbox{cov}(x) &= E\{(x - \mu)(x - \mu)^T\}\\
+&= E\{xx^T - x\mu^T - \mu x^T + \mu\mu^T\}\\
+&= E(xx^T) - E(x)\mu^T - \mu E(x)^T + \mu \mu^T\\
+&=E(xx^T) - \mu \mu^T
+\end{align*}
+
+We have:
+\begin{align*}
+E(Ax + b) = A E(x) + b = A\mu + b
+\end{align*}
+then 
+\begin{align*}
+\mbox{cov}(Ax + b) &= E\{[(Ax+b) - (A\mu + b)][(Ax+b) - (A\mu + b)]^T\}\\
+&= E\{ (Ax - A\mu)(Ax - A\mu)^T \}\\
+&= E\{ A(x - \mu)(x - \mu)^TA^T \}\\
+&= A E\{(x - \mu)(x - \mu)^T \} A^T\\
+&= A \mbox{cov}(x)A^T
+\end{align*}
+
+
+\subsection*{B}
+
+\begin{align*}
+p(z) &= \prod_{i=1}^p p(z_i)\\
+&= \frac{1}{(\sqrt{2\pi})^p}\exp\left(-\sum_{i=1}^p\frac{z_i^2}{2}\right)\\
+&= \frac{1}{(\sqrt{2\pi})^p}\exp\left(-\frac{z^Tz}{2}\right)
+\end{align*}
+
+The MGF of \(z\) is:
+\begin{align*}
+E(\exp(t^Tz)) &= E\left[\exp\left(\sum_{i=1}^p t_iz_i\right)\right]\\
+&= E\left[ \prod_{i=1}^p \exp(t_iz_i) \right]\\
+&= \prod_{i=1}^p E[\exp(t_iz_i)]\\
+&=\prod_{i=1}^p \exp(t_i^2/2)\\
+&= \exp \left[ \sum_{i=1}^p t_i^2/2 \right]\\
+&= \exp(t^Tt/2)
+\end{align*}
+
+\subsection*{C}
+
+
 \end{document}
