@@ -1,0 +1,97 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\title{Statistical Modeling 2 \\ Exercise 1}
+
+\begin{document}
+\maketitle
+
+\section{Bayesian inference in simple conjugate families}
+\subsection*{A}
+\begin{align}
+p(w \mid x_1, \ldots, x_N) &\propto p(x_1, \ldots, x_N \mid w) p(w) \tag{Bayes rule} \\
+&\propto \prod_{i=1}^N p(x_i|w) w^{a-1}(1-w)^{b-1} \tag{indepence} \\
+&\propto w^s (1-w)^{N-s}w^{a-1}(1-w)^{b-1} \tag{let \(s = \sum_{i=1}^N x_i\)} \\
+&= w^{s+a-1}(1-w)^{N-s+b-1} \tag*{}\\
+& \propto \mathrm{Beta}(s+a, N-s+b) \tag*{}
+\end{align}
+
+\subsection*{B}
+Let \(f(x_1, x_2) = (y1, y2) = (x_1/(x_1+x_2), x_1+x_2) \), we have:
+\begin{align*}
+f^{-1}(y1, y2) = (x_1, x_2) = (y_1y_2, y_2 - y_1y_2)
+\end{align*}
+We then calculate the Jacobian of \(f^{-1}\):
+\begin{align*}
+\partial x_1 / \partial y_1 &= y_2 \\
+\partial x_1 / \partial y_2 &= y_1 \\
+\partial x_2 / \partial y_1 &= -y_2 \\
+\partial x_2 / \partial y_2 &= 1-y_1\\
+\end{align*}
+Therefore,
+\begin{align*}
+|J(f^{-1})| &= \begin{vmatrix}
+y_2 & y_1 \\
+-y_2 & 1 - y_1
+\end{vmatrix} \\
+&= y_2(1-y_1) + y_1y_2\\
+&= y_2
+\end{align*}
+Let \(p_X\) be the joint density of \((x_1, x_2)\). We have the joint density of \(y_1\) and \(y_2\):
+\begin{align*}
+p(y_1, y_2) &= p_X(f^{-1}(y_1,y_2)) |J(f^{-1}(y_1, y_2))| \\
+&=\mathrm{Ga}(y_1y_2; a_1, 1) \mathrm{Ga}(y2 - y_1y_2; a_2, 1) y_2\\
+&= \frac{(y_1y_2)^{a_1-1} \exp(-y_1y_2)}{\Gamma(a_1)}
+\frac{((1-y_1)y_2)^{a_2-1} \exp(y_1y_2-y_2)}{\Gamma(a_2)} y_2\\
+&= \frac{y_1^{a_1-1}y_2^{a_1+a_2-1}(1-y_1)^{a_2-1}\exp(-y_2)}{\Gamma(a_1)\Gamma(a_2)}
+\end{align*}
+The marginals are:
+\begin{align*}
+p(y_1) &= \int_{0}^{\infty} p(y_1, y_2) dy_2\\
+&= \frac{y_1^{a_1-1}(1-y_1)^{a_2-1}}{\Gamma(a_1)\Gamma(a_2)} \int_{0}^{\infty}y_2^{a_1+a_2-1}\exp(-y_2) dy_2\\
+&=\frac{y_1^{a_1-1}(1-y_1)^{a_2-1}\Gamma
+(a_1+a_2)}{\Gamma(a_1)\Gamma(a_2)}
+\end{align*}
+and 
+\begin{align*}
+p(y_2) &= \int_{0}^{\infty} p(y_1, y_2) dy_1\\
+&=\frac{y_2^{a_1+a_2-1}\exp(-y_2)}{\Gamma(a_1)\Gamma(a_2)}\int_{0}^{\infty}y_1^{a_1-1}(1-y_1)^{a_2-1}\\
+&= \frac{y_2^{a_1+a_2-1}\exp(-y_2)}{\Gamma(a_1)\Gamma(a_2)} \mathrm{Beta}(a_1, a_2)
+\end{align*}
+
+\subsection*{C}
+The posterior is:
+\begin{align*}
+p(\theta| x_1, \ldots, x_N) &\propto p(x_1, \ldots, x_N | \theta) p(\theta)\\
+&=\prod_{i=1}^N \mbox{N}(x_i; \theta, \sigma^2) \mbox{N}(\theta; m, v)\\
+&\propto \prod_{i=1}^N \exp\left( -\frac{(x_i-\theta)^2}{2\sigma^2} \right) \exp\left( -\frac{(\theta - m)^2}{2v} \right)\\
+&= \prod_{i=1}^N\exp\left(- \frac{x_i^2-2x_i\theta + \theta^2}{2\sigma^2} \right) \exp\left( -\frac{\theta^2 - 2\theta m + m^2}{2v} \right)\\
+&=\exp\left( \frac{-\sum_i x_i^2+2\sum_i x_i\theta - N\theta^2}{2\sigma^2} \right) \exp\left( \frac{-\theta^2 + 2\theta m - m^2}{2v} \right)\\
+&= \exp \left( -\theta^2\left(\frac{N}{2\sigma^2} + \frac{1}{2v} \right) + \theta\left(\frac{\sum_ix_i}{\sigma^2} + \frac{m}{v}\right) - \frac{\sum_ix_i^2}{2\sigma^2} - \frac{m^2}{2v} \right)
+\end{align*}
+We then complete the square:
+
+\subsection*{D}
+\begin{align*}
+p(\omega \mid x_1, \ldots, x_N) &\propto \prod_{i=1}^N p(x_i \mid \theta, \omega) p(\omega)\\
+&\propto \prod_{i=1}^N \omega^{1/2} \exp \left[- \frac{\omega}{2}(x_i-\theta)^2 \right] \frac{b^a}{\Gamma(a)}\omega^{a-1}\exp(-b\omega)\\
+&\propto \omega^{N/2 + a - 1} \exp\left[ -\omega \left( b + \frac{\sum_i(x_i-\theta)^2}{2} \right) \right]\\
+&\propto \mbox{Ga}\left(a+\frac{N}{2}, b + \frac{\sum_i(x_i-\theta)^2}{2} \right)
+\end{align*}
+We have the posterior of the variance:
+\begin{align*}
+p(\sigma^2\mid x_1, \ldots, x_N) = \mbox{IG}\left(a+\frac{N}{2}, b + \frac{\sum_i(x_i-\theta)^2}{2} \right)
+\end{align*}
+
+\subsection*{E}
+
+\subsection*{F}
+\begin{align*}
+p(x) &= \int_{0}^{\infty} p(x\mid \sigma^2) p(\sigma^2) d\sigma^2\\
+&= \int_{0}^{\infty} p(x\mid \omega) p(\omega) d\omega\\
+&= \int_{0}^{\infty} \left(\frac{\omega}{2\pi}\right)^{1/2}\exp\left(-\frac{\omega}{2}x^2\right)\frac{b^a}{\Gamma(a)}\omega^{a-1}\exp(-b\omega) d\omega\\
+&\propto \int_{0}^{\infty} \omega^{1/2 + a - 1}\exp\left(-\omega\left(\frac{x^2}{2} + b\right)\right) d\omega\\
+&= \frac{\Gamma(a+1/2)}{(b+x^2/2)^{a+1/2}}\\
+&\propto \frac{\Gamma(\frac{2a+1}{2})}{(1 + \frac{x^2/2}{b})^{a+1/2}}
+\end{align*}
+\end{document}
