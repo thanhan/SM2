@@ -184,10 +184,19 @@ E(\exp(t^Tz)) &= E\left[\exp\left(\sum_{i=1}^p t_iz_i\right)\right]\\
 \end{align*}
 
 \subsection*{C}
+We need to prove that for all vector \(a\) not identically zero, the scalar quantity \(z = a^T x\) is normally distributed if and only if
+\begin{align*}
+E[\exp(t^Tx)] = \exp(t^T\mu + t^T\Sigma t/2)
+\end{align*}
 
+\noindent
+{\bf (only if)} We have that \(z = a^T x\) is normally distributed:
+\begin{align*}
+E[\exp(ta^Tx)] = \exp(mt + vt^2/2)
+\end{align*}
 
 \subsection*{D}
-We have \(z \sim \mbox{N}(0, \mbox{I})\) and \(z = Lz + \mu \).
+We have \(z \sim \mbox{N}(0, \mbox{I})\) and \(x = Lz + \mu \).
 
 \noindent
 The MGF of \(x\) is:
@@ -214,4 +223,26 @@ E(\exp(t^Tx)) &= \exp \left(t^T\mu + \frac{1}{2}t^TLL^Tt \right)
 
 \noindent
 Therefore, \(x \sim \mbox{N}(\mu, LL^T)\).
+
+\subsection*{E}
+We have that \(x\) has a multivariate normal distribution: \(x \sim \mbox{N}(\mu, \Sigma)\). The covariance matrix \(\Sigma\) is symmetric positive definite and has a Cholesky decomposition:
+\begin{align*}
+\Sigma = L L^T
+\end{align*}
+where \(L\) is a lower triangular matrix with positive diagonal entries and therefore invertible. Let
+\begin{align*}
+z = L^{-1}(x-\mu)
+\end{align*}
+
+Consider the MGF of \(z\):
+\begin{align*}
+E[\exp(t^Tz)] &= E[\exp(t^TL^{-1}(x-\mu))]\\
+&= E[\exp(t^TL^{-1}x) \cdot \exp(-t^TL^{-1}\mu)]\\
+&= \mathrm{MGF}_x(t^TL^{-1}) \cdot \exp(-t^TL^{-1}\mu)\\
+&= \exp(t^TL^{-1}\mu + t^TL^{-1}\Sigma L^{-T}t/2) \cdot \exp(-t^TL^{-1}\mu)\\
+&= \exp(t^TL^{-1}\Sigma L^{-T}t/2)\\
+&= \exp(t^TL^{-1} (LL^T) L^{-T}t/2)\\
+&= \exp(t^Tt/2)\\
+\end{align*}
+We conclude that \(z\) has standard multivariate normal distribution and that \(x\) can be written as an affine transformation of standard normal distribution.
 \end{document}
