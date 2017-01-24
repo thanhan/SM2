@@ -186,4 +186,32 @@ E(\exp(t^Tz)) &= E\left[\exp\left(\sum_{i=1}^p t_iz_i\right)\right]\\
 \subsection*{C}
 
 
+\subsection*{D}
+We have \(z \sim \mbox{N}(0, \mbox{I})\) and \(z = Lz + \mu \).
+
+\noindent
+The MGF of \(x\) is:
+\begin{align*}
+E(\exp(t^Tx)) &= E[\exp(t^TLz + t^T\mu)]
+\end{align*}
+The expectation is with respect to \(z\), \(t^T\mu\) is a constant, we then look at:
+\begin{align*}
+E[\exp(t^TLz)] &= E\left[\exp\left(\sum_{i=1}^p \sum_{j=1}^p t_i L_{ij} z_j\right)\right]\\
+&= E \left[ \prod_{j=1}^p \exp\left(\sum_{i=1}^p t_iL_{ij}z_j\right) \right]\\
+&= \prod_{j=1}^p E \left[  \exp\left(\sum_{i=1}^p t_iL_{ij}z_j\right) \right] \tag{indepence}\\
+&= \prod_{j=1}^p \mathrm{MGF}_{z_j}\left(\sum_{i=1}^p t_iL_{ij}\right) \\
+&= \prod_{j=1}^p \exp\left(\frac{1}{2} (t^TL_j)^2 \right)\\
+&= \prod_{j=1}^p \exp\left(\frac{1}{2} t^TL_jL_j^Tt \right)\\
+&= \exp\left(\frac{1}{2}\sum_{j=1}^p t^TL_jL_j^Tt \right)\\
+&= \exp\left(\frac{1}{2}t^TLL^Tt \right)\\
+\end{align*}
+
+\noindent
+Come back to the MGF of \(x\):
+\begin{align*}
+E(\exp(t^Tx)) &= \exp \left(t^T\mu + \frac{1}{2}t^TLL^Tt \right)
+\end{align*}
+
+\noindent
+Therefore, \(x \sim \mbox{N}(\mu, LL^T)\).
 \end{document}
