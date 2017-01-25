@@ -59,6 +59,8 @@ p(y_2) &= \int_{0}^{\infty} p(y_1, y_2) dy_1\\
 &= \frac{y_2^{a_1+a_2-1}\exp(-y_2)}{\Gamma(a_1)\Gamma(a_2)} \mathrm{Beta}(a_1, a_2)
 \end{align*}
 
+We can simulate a Beta random variable by taking two Gamma random variable as \(x_1\) and \(x_2\) and evaluate \(y_1\).
+
 \subsection*{C}
 The posterior is:
 \begin{align*}
@@ -135,12 +137,15 @@ The posterior is:
 p(x) &= \int_{0}^{\infty} p(x\mid \sigma^2) p(\sigma^2) d\sigma^2\\
 &= \int_{0}^{\infty} p(x\mid \omega) p(\omega) d\omega\\
 &= \int_{0}^{\infty} \left(\frac{\omega}{2\pi}\right)^{1/2}\exp\left(-\frac{\omega}{2}x^2\right)\frac{b^a}{\Gamma(a)}\omega^{a-1}\exp(-b\omega) d\omega\\
-&\propto \int_{0}^{\infty} \omega^{1/2 + a - 1}\exp\left(-\omega\left(\frac{x^2}{2} + b\right)\right) d\omega\\
-&= \frac{\Gamma(a+1/2)}{(b+x^2/2)^{a+1/2}}\\
-&\propto \frac{\Gamma(\frac{2a+1}{2})}{(1 + \frac{x^2/2}{b})^{a+1/2}}
+&= \frac{b^a}{(2\pi)^{1/2}\Gamma(a)} \int_{0}^{\infty} \omega^{1/2 + a - 1}\exp\left(-\omega\left(\frac{x^2}{2} + b\right)\right) d\omega\\
+&= \frac{b^a}{(2\pi)^{1/2}\Gamma(a)} \frac{\Gamma(a+1/2)}{(b+x^2/2)^{a+1/2}} \tag{Gamma integral}\\
+&= \frac{\Gamma(a+1/2)}{(2\pi b)^{1/2}\Gamma(a)(1+\frac{x^2}{2b})^{a+1/2}}\\
 \end{align*}
-
-
+Let \(\nu = 2a\) and \(\lambda = a/b\), we have:
+\begin{align*}
+p(x) = \frac{\Gamma(\frac{\nu+1}{2})}{\Gamma(\nu/2)} \left(\frac{\lambda}{\pi \nu}\right)^{1/2} \left(1 + \frac{\lambda x^2}{2}\right)^{-\frac{\nu+1}{2}}
+\end{align*}
+This is the Student t distribution with \(\nu\) degree of freedom and `precision' \(\lambda\).
 
 \section{The multivariate normal distribution}
 \subsection*{A}
@@ -192,8 +197,11 @@ E[\exp(t^Tx)] = \exp(t^T\mu + t^T\Sigma t/2)
 \noindent
 {\bf (only if)} We have that \(z = a^T x\) is normally distributed:
 \begin{align*}
-E[\exp(ta^Tx)] = \exp(mt + vt^2/2)
+\mathrm{MGF}_z(s) = E[\exp(sa^Tx)] = \exp(ms + vs^2/2)
 \end{align*}
+Consider:
+
+
 
 \subsection*{D}
 We have \(z \sim \mbox{N}(0, \mbox{I})\) and \(x = Lz + \mu \).
