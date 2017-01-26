@@ -253,4 +253,75 @@ E[\exp(t^Tz)] &= E[\exp(t^TL^{-1}(x-\mu))]\\
 &= \exp(t^Tt/2)\\
 \end{align*}
 We conclude that \(z\) has standard multivariate normal distribution and that \(x\) can be written as an affine transformation of standard normal distribution.
+
+\subsection*{F}
+Let \(z\) be standard multivariate Normal:
+\begin{align*}
+p_Z(z) \propto \exp\left(-\frac{z^tz}{2}\right)
+\end{align*}
+
+By the previous result, we have that \(x = Lz + \mu\) has multivariate Normal distribution. Since \(L\) is full rank, it is invertible, let \(z = f(x) = L^{-1}(x - \mu)\)
+
+The pdf of \(x\) is:
+\begin{align*}
+p_X(x) &= p_Z(f(x)) |J_f(x)|\\
+& \propto \exp\left(-\frac{(x-\mu)^TL^{-T} L^{-1}(x-\mu)}{2}\right) |L^{-1}|\\
+& \propto \exp( -Q(x-\mu)/2)
+\end{align*}
+
+
+\subsection*{G}
+By the previous results, \(x_1\) and \(x_2\) are affine transformation of independent standard Normal distribution. Let \(z \sim \mbox{N}(0, I)\)
+\begin{align*}
+x_1 &= L_1z + \mu_1\\
+x_2 &= L_2z + \mu_2\\
+\end{align*}
+We have:
+\begin{align*}
+y = Ax_1 + Bx_2 &= AL_1z +  A\mu_1 + BL_2z + B\mu_2\\
+&= (AL_1 + BL_2)z +  A\mu_1 + B\mu_2\\
+\end{align*}
+
+We see that \(y\) is an affine transformation of independent standard Normal variables and therefore is multivariate Normal with mean \(A\mu_1 + B\mu_2\) and variance
+\begin{align*}
+(AL_1 + BL_2)(AL_1 + BL_2)^T &= AL_1L_1^TA^T + AL_1L_2^TB^T + BL_2L_1^TA^T + BL_2L_2^TB^T\\
+&= A \Sigma_1 A^T + AL_1L_2^TB^T + BL_2L_1^TA^T + B\Sigma_2B^T
+\end{align*}
+\section{Conditionals and marginals}
+\subsection*{A}
+
+Decompose the covariance matrix \(\Sigma\) and partition \(L\) into \(L_1\) and \(L_2\) where \(L_1\) has \(k\) elements and corresponds to \(x_1\).
+
+
+\begin{align*}
+\Sigma &= LL^T\\
+&= \begin{pmatrix}
+L_1\\
+L_2
+\end{pmatrix}\begin{pmatrix}
+L_1^T & L_2^T
+\end{pmatrix}\\
+&= \begin{pmatrix}
+L_1L_1^T & L_1L_2^T\\
+L_2L_1^T & L_2L_2^T
+\end{pmatrix}\\
+\end{align*}
+
+We have that \(\Sigma_{11} = L_1L_1^T\). By the previous results, \(x = Lz + \mu\) where \(z\) is a vector of independent standard Normal variables. Take the first \(k\) element, we have:
+
+\begin{align*}
+x_1 = L_1z_1 + \mu_1\\
+\end{align*}
+where \(z_1\) is also a vector of independent standard Normal variables. Therefore, \(x_1\) also has multivariate Normal distribution with mean \(mu_1\) and variance \(L_1L_1^T = \Sigma_{11}\).
+
+
+
+
+
+\subsection*{B}
+
+
+
+
+
 \end{document}
