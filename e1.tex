@@ -319,9 +319,33 @@ where \(z_1\) is also a vector of independent standard Normal variables. Therefo
 
 
 \subsection*{B}
-
-
-
+\begin{align*}
+\begin{pmatrix}
+\Sigma_{11} & \Sigma_{12}\\
+\Sigma_{21} & \Sigma_{22}
+\end{pmatrix}^{-1} &= \begin{pmatrix}
+(\Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21})^{-1}  & -\Sigma_{11}^{-1}\Sigma_{12}(\Sigma_{22} - \Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12})^{-1}  \\
+-\Sigma_{22}^{-1}\Sigma_{21}(\Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{21})^{-1} & (\Sigma_{22} - \Sigma_{21}\Sigma_{11}^{-1}\Sigma_{12})^{-1}
+\end{pmatrix}\\
+&= \begin{pmatrix}
+\Omega_{11} & \Omega_{12}\\
+\Omega_{12}^T & \Omega{22}
+\end{pmatrix}
+\end{align*}
+\subsection*{C}
+\begin{align*}
+\log p(x_1|x_2) &= \log p(x_1, x_2) - \log(x_2)\\
+&= \mbox{const} -\frac{(x-\mu)^T\Sigma^{-1}(x-\mu)}{2}\\
+&=\mbox{const} - \frac{1}{2} \left\lbrace \begin{pmatrix} x_1 - \mu_1 \\x_2 - \mu_2 \end{pmatrix}^{T} \begin{pmatrix}
+\Omega_{11} & \Omega_{12}\\
+\Omega_{12}^T & \Omega{22}
+\end{pmatrix} \begin{pmatrix} x_1 - \mu_1 \\x_2 - \mu_2 \end{pmatrix}   \right\rbrace\\
+&= \mbox{const} - \frac{1}{2} \left\lbrace (x_1 - \mu_1)^T\Omega_{11}(x_1-\mu_1) + (x_2-\mu_2)^T\Omega_{12}^T(x_1-\mu_1) \right.  \\
+& \left.  + (x_1 - \mu_1)^T\Omega_{12}(x_2-\mu_2) + (x_2-\mu_2)^T\Omega_{22}^T(x_2-\mu_2) \right\rbrace\\
+&= \mbox{const} - \frac{1}{2} \left\lbrace (x_1 - \mu_1)^T\Omega_{11}(x_1-\mu_1) + 2(x_1-\mu_1)^T\Omega_{12}(x_2-\mu_2) \right\rbrace\\
+&= \mbox{const} - \frac{1}{2} \left\lbrace x_1^T\Omega_{11}x_1 - x_1^T\Omega_{11}\mu_1 - \mu_1^T\Omega_{11}x_1 +   2x_1^T\Omega_{12}x_2 - 2x_1^T\Omega_{12}\mu_2 \right\rbrace\\
+&= \mbox{const} - \frac{1}{2}\left\lbrace x_1^T\left( \Omega_{11}x_1 - \Omega_{11}\mu_1 - \Omega_{11}^T\mu_1 + 2\Omega_{12}x_2 - 2\Omega_{12}\mu_2  \right)   \right\rbrace\\
+\end{align*}
 
 
 \end{document}
