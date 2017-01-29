@@ -417,4 +417,42 @@ where \(X_j\) is the column \(j\) of \(X\) for \(j = 1, \ldots , p\). We have:
 \iff & X^T(X\beta - y) = 0 \\
 \end{align*}
 This is the same as the equation that we solve in least square.
+
+\subsection*{B}
+The weighted sum of squared error is:
+\begin{align*}
+L(\beta) &= \sum_{i=1}^n w_i (y_i - x_i^T\beta)^2\\
+\end{align*}
+We first take the derivative with respect to \(\beta\):
+\begin{align*}
+\frac{\partial L}{\partial \beta} = \sum_{i=1}^n w_i (2) (y_i - x_i^T\beta) (-x_i)
+\end{align*}
+Setting the derivative to \(0\), we have:
+\begin{align*}
+\sum_{i=1}^n w_i x_i (y_i - x_i^T\beta) = 0\\
+\iff \sum_{i=1}^n w_i x_i y_i - \sum_{i=1}^n w_i x_i x_i^T\beta = 0\\
+\iff \sum_{i=1}^n w_i x_{ik} y_i - \sum_{i=1}^n w_i x_{ik} x_{i}^T\beta_k = 0 \hspace{0.5cm} \forall k = 1, \ldots, p \\
+\iff \beta_k = \frac{\sum_{i=1}^n w_i x_{ik} y_i}{\sum_{i=1}^n w_i x_{ik} x_{i}^T\beta_k} \hspace{0.5cm} \forall k = 1, \ldots, p \\
+\end{align*}
+
+The maximum likelihood under heteroskedastic Gaussian error is:
+\begin{align*}
+L(\beta) &= \prod_{i=1}^n p(y_i \mid \beta, \sigma_i^2)\\
+&= N(y \mid X\beta, C)\\
+\end{align*}
+where the covariance matrix is \(C\) is a diagonal matrix such that \(C_{ii} = \sigma^2_i\). We have that \(C^{-1} = D\) is a diagonal matrix such that \(D_{ii} = 1/\sigma^2_i\).
+The maximum likelihood is then:
+\begin{align*}
+L(\beta) = N(y \mid X\beta, C) \propto \exp\left(-\frac{1}{2}(y - X\beta)^TD(y - X\beta)\right)\\
+\end{align*}
+Maximizing the that likelihood is the same as minimizing:
+\begin{align*}
+(y - X\beta)^TD(y - X\beta) &= \sum_{i=1}^n (y_i - x_i^T\beta)\frac{1}{\sigma^2}(y_i - x_i^T\beta)\\
+&= \sum_{i=1}^n w_i (y_i - x_i^T\beta)^2
+\end{align*}
+where \(w_i = \frac{1}{\sigma_i^2}\).
+
+This is the same objective as the weighted least square.
+
+
 \end{document}
