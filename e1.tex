@@ -367,4 +367,54 @@ Therefore,
 
 We conclude that \(p(x_1|x_2)\) has Normal distribution with mean \(\mu_{1|2}\) given above and variance \(\Omega_{11}^{-1} = \Sigma_{11} - \Sigma_{12}\Sigma_{22}^{-1}\Sigma_{12}^T\)
 
+
+\section{Multiple regression: three classical principles for inference}
+
+\subsection{A}
+In the least square estimate, we minimize:
+\begin{align*}
+L(\beta) &= \sum_{i=1}^n (y_i - x_i^T\beta)^2\\
+&= (y - X\beta)^T(y - X\beta)\\
+&= -y^T y -y^TX\beta - \beta^TX^T y + \beta^TX^T X\beta\\
+\end{align*}
+where we define \(y = (y_1, \ldots, y_n)^T\) as a \(n\times 1\) vector and \(X = (x_1^T; \ldots; x_n^T)\) as a \(n\times p\) matrix.
+We take the derivative of \(L\) and set to \(0\):
+\begin{align*}
+\frac{\partial L}{\partial \beta} &= - X^T y - X^T y + X^T X \beta + X^T X \beta\\
+&= 2 X^T (X \beta - y) \\
+& \text{  set } = 0 \\
+\implies & X^TX\beta = X^Ty\\
+&\beta = (X^TX)^{-1}X^Ty
+\end{align*}
+
+In the maximum likelihood estimate, we maximize:
+\begin{align*}
+L(\beta) &= \prod_{i=1}^n p(y_i \mid \beta, \sigma^2)\\
+&=   N(y \mid X\beta, \sigma^2 I)\\
+&\propto \exp \left( -\frac{1}{2} (y-X\beta)^T \frac{1}{\sigma^2}I (y-X\beta) \right)
+\end{align*}
+%which is equivalent to maximize the log likelihood:
+%\begin{align*}
+%l(\beta) &= \sum_{i=1}^n \log p(y_i \mid \beta, \sigma^2)\\
+%&= \sum_{i=1}^n \log N(y_i \mid \beta, \sigma^2)\\
+%\end{align*}
+which is equivalent to minimize:
+\begin{align*}
+&(y-X\beta)^T \frac{1}{\sigma^2}I (y-X\beta)\\
+&\propto (y-X\beta)^T(y-X\beta)
+\end{align*}
+which is the same as the least square objective function.
+
+In the method of moment estimate, we set:
+\begin{align*}
+\mathrm{cov}(y - X\beta, X_j) = 0
+\end{align*}
+where \(X_j\) is the column \(j\) of \(X\) for \(j = 1, \ldots , p\). We have:
+\begin{align*}
+&\mathrm{cov}(y - X\beta, X_j) = 0 \hspace{0.5cm} \forall j\\
+\iff &(y - X\beta)^T X_j = 0 \hspace{0.5cm} \forall j\\
+\iff & (y - X\beta)^T X = 0 \\
+\iff & X^T(X\beta - y) = 0 \\
+\end{align*}
+This is the same as the equation that we solve in least square.
 \end{document}
