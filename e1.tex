@@ -1,6 +1,17 @@
 \documentclass{article}
 \usepackage{amsmath}
 
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour}
+    }
+
+\lstset{style=mystyle}
+
 \title{Statistical Modeling 2 \\ Exercise 1}
 
 \begin{document}
@@ -479,9 +490,66 @@ E(\hat{\beta}) &= (X^TX)^{-1}X^T E(y)\\
 \subsection*{B}
 We can estimate \(\sigma^2\) by:
 \begin{align*}
-\hat{\sigma^2} = \frac{\sum_{i=1}^n\hat{\epsilon}_i^2}{n-2} = \frac{\sum_{i=1}^n(x_i\hat{\beta} - y_i)^2}{n-2} = \frac{(X\hat{\beta} - y)^T(X\hat{\beta} - y)}{n-2}
+\hat{\sigma^2} = \frac{\sum_{i=1}^n\hat{\epsilon}_i^2}{n-p} = \frac{\sum_{i=1}^n(x_i\hat{\beta} - y_i)^2}{n-p} = \frac{(X\hat{\beta} - y)^T(X\hat{\beta} - y)}{n-p}
 \end{align*}
+
+\begin{lstlisting}[language=R, caption = ]
+# Load the library
+# you might have to install this the first time
+library(mlbench)
+
+# Load the data
+ozone = data(Ozone, package='mlbench')
+
+# Look at the help file for details
+?Ozone
+
+# Scrub the missing values
+# Extract the relevant columns 
+ozone = na.omit(Ozone)[,4:13]
+
+y = ozone[,1]
+x = as.matrix(ozone[,2:10])
+
+# add an intercept
+x = cbind(1,x)
+
+# compute the estimator
+betahat = solve(t(x) %*% x) %*% t(x) %*% y
+
+# Fill in the blank
+sshat = t(x %*% betahat - y) %*% (x %*% betahat - y)
+sshat = sshat[1,1] / (dim(x)[1] - dim(x)[2])
+betacov = sshat * t(solve(t(x) %*% x) )
+
+# Now compare to lm
+# the 'minus 1' notation says not to fit an intercept
+#(we've already hard-coded it as an extra column)
+lm1 = lm(y~x-1)
+
+summary(lm1)
+betacovlm = vcov(lm1)
+sqrt(diag(betacovlm))
+
+
+
+
+\end{lstlisting}
+
 
 \textit{Propagating uncertainty}
 \subsection*{A}
+\begin{align*}
+\mbox{var}(f) &= \mbox{var}(\theta_1 + \theta_2)\\
+&= \mbox{var}(\theta_1) + \mbox{var}(\theta_2) + 2\mbox{cov}(\theta_1, \theta_2)\\
+&= \hat{\Sigma}_{11} + \hat{\Sigma}_{22} + 2\hat{\Sigma}_{12}\\
+\end{align*}
+In the general case, when \(f\) is the sum of \(p\) components of \(\theta\), we have:
+\begin{align*}
+\mbox{var}(f) &= \mbox{var}(\theta_1 + \ldots + \theta_p)\\
+&= \mbox{var}(\theta_1) + \dots + \mbox{var}(\theta_p) + \sum_{i\neq j}\mbox{cov}(\theta_i, \theta_j)\\
+&= \sum_{i,j = 1}^p \hat{\Sigma}_{ij}
+\end{align*}
+
+\subsection*{B}
 \end{document}
