@@ -454,5 +454,34 @@ where \(w_i = \frac{1}{\sigma_i^2}\).
 
 This is the same objective as the weighted least square.
 
+\section{Quantifying uncertainty: some basic frequentist ideas}
+\textit{In linear regression}
+\subsection*{A}
 
+The estimate is:
+\begin{align*}
+\hat{\beta} = (X^TX)^{-1}X^Ty
+\end{align*}
+which is a linear combination of \(y\). Since \(y\) has Normal distribution, \(\hat{\beta}\) also has Normal distribution.
+\begin{align*}
+E(\hat{\beta}) &= (X^TX)^{-1}X^T E(y)\\
+&= (X^TX)^{-1}X^T X\beta\\
+&= \beta
+\end{align*}
+
+\begin{align*}
+\mbox{cov}(\hat{\beta}) &= (X^TX)^{-1}X^T \mbox{cov}(x) X(X^TX)^{-T}\\
+&= (X^TX)^{-1}X^T (\sigma^2 I) X(X^TX)^{-T}\\
+&= \sigma^2 (X^TX)^{-1}X^T  X(X^TX)^{-T}\\
+&= \sigma^2 (X^TX)^{-T}
+\end{align*}
+
+\subsection*{B}
+We can estimate \(\sigma^2\) by:
+\begin{align*}
+\hat{\sigma^2} = \frac{\sum_{i=1}^n\hat{\epsilon}_i^2}{n-2} = \frac{\sum_{i=1}^n(x_i\hat{\beta} - y_i)^2}{n-2} = \frac{(X\hat{\beta} - y)^T(X\hat{\beta} - y)}{n-2}
+\end{align*}
+
+\textit{Propagating uncertainty}
+\subsection*{A}
 \end{document}
