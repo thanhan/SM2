@@ -484,4 +484,20 @@ We can estimate \(\sigma^2\) by:
 
 \textit{Propagating uncertainty}
 \subsection*{A}
+
+\subsection*{B}
+We first approximate \(f\) by a first order Taylor approximation:
+\begin{align*}
+f(\hat{\theta}) &\approx f(\theta) + f'(\theta)^T(\hat{\theta} - \theta)\\
+&= f(\theta) + \sum_{i=1}^p f'(\theta_i) (\hat{\theta_i} - \theta_i)
+\end{align*}
+
+We then approximate the variance of \(f\) by the variance of the approximation:
+\begin{align*}
+\mbox{var}[f(\hat{\theta})] &\approx \mbox{var}[ f(\theta) + \sum_{i=1}^p f'(\theta_i) (\hat{\theta_i} - \theta_i)]\\
+&= \sum_{i=1}^p f'(\theta_i)^2 \mbox{var}(\hat{\theta_i}) + \sum_{i\neq j} f'(\theta_i) f'(\theta_j) \mbox{cov}(\hat{\theta_i}, \hat{\theta_j})\\
+&\approx \sum_{i=1}^p f'(\hat{\theta}_i)^2 \Sigma_{ii} + \sum_{i\neq j} f'(\hat{\theta}_i) f'(\hat{\theta}_j) \Sigma_{ij}\\
+\end{align*}
+
+For this to be a good approximation, \(f\) should be approximately linear around \(\theta\) so that the Taylor approximation is close. We have also approximated \(f'(\theta)\) by \(f'(\hat{\theta})\), so we need \(\hat{\theta}\) to be close to \(\theta\).
 \end{document}
