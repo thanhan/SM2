@@ -1,5 +1,6 @@
 # Load the library
 # you might have to install this the first time
+nboots = 10000
 library(mlbench)
 
 # Load the data
@@ -18,8 +19,8 @@ x = as.matrix(ozone[,2:10])
 # add an intercept
 x = cbind(1,x)
 
-boot = matrix(0, ncol = 10, nrow = 1000000)
-for(i in 1:1000000)
+boot = matrix(0, ncol = 10, nrow = nboots)
+for(i in 1:nboots)
 {
   idx = sample(1:nrow(x), nrow(x), replace=TRUE)
   bx = x[idx,]
@@ -44,4 +45,7 @@ lm1 = lm(y~x-1)
 summary(lm1)
 betacovlm = vcov(lm1)
 sqrt(diag(betacovlm))
+
+round(betacovlm, 3) # theory estimate
+round(bcov, 3) # bootstrap estimate
 

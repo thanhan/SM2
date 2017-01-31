@@ -526,18 +526,36 @@ sshat = sshat[1,1] / (dim(x)[1] - dim(x)[2])
 betacov = sshat * t(solve(t(x) %*% x) )
 
 # Now compare to lm
-# the 'minus 1' notation says not to fit an intercept
-#(we've already hard-coded it as an extra column)
+# the 'minus 1' notation says not to fit an intercept (we've already hard-coded it as an extra column)
 lm1 = lm(y~x-1)
 
 summary(lm1)
 betacovlm = vcov(lm1)
-sqrt(diag(betacovlm))
-
-
-
+print("cov of Beta from LM")
+print(sqrt(diag(betacovlm)))
+print("cov of Beta from my calculation")
+print(sqrt(diag(betacov)))
 
 \end{lstlisting}
+
+\noindent
+OUTPUT:
+
+\begin{verbatim}
+[1] "cov of Beta from LM"
+           x          xV5          xV6          xV7          xV8 
+3.832869e+01 7.251104e-03 1.741433e-01 2.376936e-02 6.929942e-02 
+         xV9         xV10         xV11         xV12         xV13 
+1.247136e-01 3.943697e-04 1.477719e-02 1.192917e-01 4.896254e-03 
+
+[1] "cov of Beta from my calculation"
+                       V5           V6           V7           V8 
+3.832869e+01 7.251104e-03 1.741433e-01 2.376936e-02 6.929942e-02 
+          V9          V10          V11          V12          V13 
+1.247136e-01 3.943697e-04 1.477719e-02 1.192917e-01 4.896254e-03 
+\end{verbatim}
+
+
 
 
 \textit{Propagating uncertainty}
@@ -575,7 +593,191 @@ For this to be a good approximation, \(f\) should be approximately linear around
 \textit{The bootstrap}
 \subsection*{A}
 
+\begin{lstlisting}{language=R}
+# Load the library
+# you might have to install this the first time
+nboots = 100000
+library(mlbench)
+
+# Load the data
+ozone = data(Ozone, package='mlbench')
+
+# Look at the help file for details
+?Ozone
+
+# Scrub the missing values
+# Extract the relevant columns 
+ozone = na.omit(Ozone)[,4:13]
+
+y = ozone[,1]
+x = as.matrix(ozone[,2:10])
+
+# add an intercept
+x = cbind(1,x)
+
+boot = matrix(0, ncol = 10, nrow = nboots)
+for(i in 1:nboots)
+{
+  idx = sample(1:nrow(x), nrow(x), replace=TRUE)
+  bx = x[idx,]
+  by = y[idx]
+  betahat = solve(t(bx) %*% bx) %*% t(bx) %*% by
+  boot[i, ] = betahat
+}
+
+bcov = cov(boot)
+sqrt(diag(bcov))
+
+# compute the estimator
+
+
+# Fill in the blank
+# betacov = ?
+
+# Now compare to lm
+# the 'minus 1' notation says not to fit an intercept (we've already hard-coded it as an extra column)
+lm1 = lm(y~x-1)
+
+summary(lm1)
+betacovlm = vcov(lm1)
+sqrt(diag(betacovlm))
+
+round(betacovlm, 3) # theory estimate
+round(bcov, 3) # bootstrap estimate
+
+
+\end{lstlisting}
+
+\begin{verbatim}
+> round(betacovlm, 3) # theory estimate
+            x    xV5    xV6    xV7    xV8    xV9  xV10   xV11   xV12   xV13
+x    1469.089 -0.277 -2.062 -0.153  0.359  1.591 0.001 -0.041  0.419 -0.003
+xV5    -0.277  0.000  0.000  0.000  0.000  0.000 0.000  0.000  0.000  0.000
+xV6    -2.062  0.000  0.030 -0.001 -0.001 -0.002 0.000  0.000  0.000  0.000
+xV7    -0.153  0.000 -0.001  0.001  0.000  0.000 0.000  0.000  0.000  0.000
+xV8     0.359  0.000 -0.001  0.000  0.005 -0.004 0.000 -0.001 -0.002  0.000
+xV9     1.591  0.000 -0.002  0.000 -0.004  0.016 0.000  0.000 -0.009  0.000
+xV10    0.001  0.000  0.000  0.000  0.000  0.000 0.000  0.000  0.000  0.000
+xV11   -0.041  0.000  0.000  0.000 -0.001  0.000 0.000  0.000  0.001  0.000
+xV12    0.419  0.000  0.000  0.000 -0.002 -0.009 0.000  0.001  0.014  0.000
+xV13   -0.003  0.000  0.000  0.000  0.000  0.000 0.000  0.000  0.000  0.000
+
+> round(bcov, 3) # bootstrap estimate
+          [,1]  [,2]   [,3]   [,4]   [,5]   [,6]  [,7]   [,8]   [,9]  [,10]
+ [1,] 1266.641 -0.24 -2.367 -0.034  0.453  1.526 0.001 -0.078  0.163 -0.003
+ [2,]   -0.240  0.00  0.000  0.000  0.000  0.000 0.000  0.000  0.000  0.000
+ [3,]   -2.367  0.00  0.026  0.000 -0.002 -0.003 0.000  0.000  0.000  0.000
+ [4,]   -0.034  0.00  0.000  0.001  0.000 -0.001 0.000  0.000  0.000  0.000
+ [5,]    0.453  0.00 -0.002  0.000  0.004 -0.002 0.000 -0.001 -0.002  0.000
+ [6,]    1.526  0.00 -0.003 -0.001 -0.002  0.013 0.000  0.000 -0.009  0.000
+ [7,]    0.001  0.00  0.000  0.000  0.000  0.000 0.000  0.000  0.000  0.000
+ [8,]   -0.078  0.00  0.000  0.000 -0.001  0.000 0.000  0.000  0.000  0.000
+ [9,]    0.163  0.00  0.000  0.000 -0.002 -0.009 0.000  0.000  0.014  0.000
+[10,]   -0.003  0.00  0.000  0.000  0.000  0.000 0.000  0.000  0.000  0.000
+\end{verbatim}
+
 \subsection*{B}
 
+\begin{lstlisting}{language = R}
+library(MASS)
+
+sim_mvn <- function(n, mu, Sigma){
+  return (mvrnorm(n = n, mu = mu, Sigma = Sigma))
+}
+
+
+mle_mvn <- function(X){
+  mu = colMeans(X)
+  n = nrow(X)
+  Sigma = cov(X)*(n-1)/n
+  return(list(mu, Sigma))
+}
+
+boot_mle <- function(bn, X){
+  m = ncol(X)
+  boot_mu = matrix(0, ncol = m, nrow = bn)
+  boot_cov = matrix(0, ncol = m*m, nrow = bn)
+  for(i in 1:bn)
+  {
+    idx = sample(1:nrow(X), nrow(X), replace=TRUE)
+    bx = X[idx,]
+    temp = mle_mvn(bx)
+    boot_mu[i,] = temp[[1]]
+    boot_cov[i,] = temp[[2]]
+  }
+  return (list(boot_mu, boot_cov))
+}
+
+mu <- c(0,0)
+Sigma <- matrix(c(10,3,3,2),2,2)
+
+list_n = c(10, 100, 1000, 10000)
+for(i in 1:4){
+  n = list_n[i]
+  X = sim_mvn(n, mu, Sigma)
+  temp = mle_mvn(X)
+  mu_hat = temp[[1]]
+  cov_hat = temp[[2]]
+  print(paste("N= ", n, " samples:"))
+  print("MLE of cov")
+  print(cov_hat)
+  temp = boot_mle(10000, X)
+  boot_cov = temp[[2]]
+  v = sqrt(diag(cov(boot_cov)))
+  print("bootstrap standard error")
+  print(matrix(v, nrow = 2, ncol = 2))
+}
+\end{lstlisting}
+
+\begin{verbatim}
+> Sigma # True covariance matrix
+     [,1] [,2]
+[1,]   10    3
+[2,]    3    2
+
+
+[1] "N=  10  samples:"
+[1] "MLE of cov"
+          [,1]     [,2]
+[1,] 11.744577 3.207579
+[2,]  3.207579 1.962002
+[1] "bootstrap standard error"
+         [,1]      [,2]
+[1,] 4.292160 1.2707615
+[2,] 1.270761 0.4323074
+
+
+[1] "N=  100  samples:"
+[1] "MLE of cov"
+          [,1]     [,2]
+[1,] 11.023129 3.265027
+[2,]  3.265027 2.153419
+[1] "bootstrap standard error"
+          [,1]      [,2]
+[1,] 1.4178240 0.5215858
+[2,] 0.5215858 0.2647075
+
+
+[1] "N=  1000  samples:"
+[1] "MLE of cov"
+         [,1]     [,2]
+[1,] 9.873546 2.873105
+[2,] 2.873105 1.942224
+[1] "bootstrap standard error"
+          [,1]       [,2]
+[1,] 0.4600641 0.17240442
+[2,] 0.1724044 0.08604483
+
+
+[1] "N=  10000  samples:"
+[1] "MLE of cov"
+          [,1]     [,2]
+[1,] 10.087604 3.068838
+[2,]  3.068838 2.040076
+[1] "bootstrap standard error"
+           [,1]       [,2]
+[1,] 0.14409462 0.05525678
+[2,] 0.05525678 0.02893835
+\end{verbatim}
 
 \end{document}

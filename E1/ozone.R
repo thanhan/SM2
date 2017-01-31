@@ -32,5 +32,8 @@ lm1 = lm(y~x-1)
 
 summary(lm1)
 betacovlm = vcov(lm1)
-sqrt(diag(betacovlm))
+print("cov of Beta from LM")
+print(sqrt(diag(betacovlm)))
+print("cov of Beta from my calculation")
+print(sqrt(diag(betacov)))
 
