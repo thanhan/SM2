@@ -539,6 +539,7 @@ sqrt(diag(betacovlm))
 
 \textit{Propagating uncertainty}
 \subsection*{A}
+
 \begin{align*}
 \mbox{var}(f) &= \mbox{var}(\theta_1 + \theta_2)\\
 &= \mbox{var}(\theta_1) + \mbox{var}(\theta_2) + 2\mbox{cov}(\theta_1, \theta_2)\\
@@ -551,5 +552,32 @@ In the general case, when \(f\) is the sum of \(p\) components of \(\theta\), we
 &= \sum_{i,j = 1}^p \hat{\Sigma}_{ij}
 \end{align*}
 
+
 \subsection*{B}
+We first approximate \(f\) by a first order Taylor approximation:
+\begin{align*}
+f(\hat{\theta}) &\approx f(\theta) + f'(\theta)^T(\hat{\theta} - \theta)\\
+&= f(\theta) + \sum_{i=1}^p f'(\theta_i) (\hat{\theta_i} - \theta_i)
+\end{align*}
+
+We then approximate the variance of \(f\) by the variance of the approximation:
+\begin{align*}
+\mbox{var}[f(\hat{\theta})] &\approx \mbox{var}[ f(\theta) + \sum_{i=1}^p f'(\theta_i) (\hat{\theta_i} - \theta_i)]\\
+&= \sum_{i=1}^p f'(\theta_i)^2 \mbox{var}(\hat{\theta_i}) + \sum_{i\neq j} f'(\theta_i) f'(\theta_j) \mbox{cov}(\hat{\theta_i}, \hat{\theta_j})\\
+&\approx \sum_{i=1}^p f'(\hat{\theta}_i)^2 \Sigma_{ii} + \sum_{i\neq j} f'(\hat{\theta}_i) f'(\hat{\theta}_j) \Sigma_{ij}\\
+\end{align*}
+
+For this to be a good approximation, \(f\) should be approximately linear around \(\theta\) so that the Taylor approximation is close. We have also approximated \(f'(\theta)\) by \(f'(\hat{\theta})\), so we need \(\hat{\theta}\) to be close to \(\theta\).
+
+\textit{The bootstrap}
+\subsection*{A}
+\begin{verbatim}
+> sqrt(diag(bcov))
+ [1] 3.548986e+01 6.755316e-03 1.620715e-01 2.434152e-02 6.610008e-02 1.157898e-01 3.741294e-04 1.560985e-02 1.175986e-01 4.023453e-03
+> sqrt(diag(betacovlm))
+           x          xV5          xV6          xV7          xV8          xV9         xV10         xV11         xV12         xV13 
+3.832869e+01 7.251104e-03 1.741433e-01 2.376936e-02 6.929942e-02 1.247136e-01 3.943697e-04 1.477719e-02 1.192917e-01 4.896254e-03
+\end{verbatim}
+
+
 \end{document}
