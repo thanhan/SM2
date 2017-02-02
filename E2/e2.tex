@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour}
+    }
+
+\lstset{style=mystyle}
+
+\title{Statistical Modeling 2 \\ Exercise 2}
+
+\begin{document}
+\maketitle
+\section{A simple Gaussian location model}
+\subsection*{A}
+The joint prior over the mean parameter \(\theta\) and precision parameter \(\omega\) is:
+\begin{align*}
+p(\theta, \omega) \approx \omega^{(d+1)/2-1} \exp \left\lbrace -\omega\frac{\kappa(\theta-\mu)^2}{2}\right\rbrace \exp \left\lbrace -\omega\frac{\eta}{2} \right\rbrace
+\end{align*}
+To get the marginal prior, we integrate out the parameter \(\omega\):
+\begin{align*}
+p(\theta) &\propto \int_0^{\infty} \omega^{(d+1)/2-1} \exp \left\lbrace -\omega\frac{\kappa(\theta-\mu)^2 + \eta}{2}\right\rbrace\\
+&\propto \left(\frac{\kappa(\theta-\mu)^2 + \eta}{2}\right)^{-(d+1)/2} \\
+&= \left(\frac{\eta}{2} + \frac{\kappa(\theta-\mu)^2}{2}\right)^{-(d+1)/2} \\
+&= \left(1 + \frac{\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2} \left(\frac{\eta}{2}\right)^{-(d+1)/2} \\
+&\propto \left(1 + \frac{\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2}\\
+&=\left(1 + \frac{1}{d}\frac{\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2}\\
+\end{align*}
+
+Let \(\nu = d, m = \mu\) and \(s = \sqrt{\eta/\kappa}\), we have a Student t distribution with \(\nu\) degrees of freedom and scale \(s\):
+\begin{align*}
+p(\theta) \propto \left(1 + \frac{1}{\nu}\frac{(\theta-m)^2}{s^2}\right)^{-(\nu+1)/2}\\
+\end{align*}
+
+\end{document}
