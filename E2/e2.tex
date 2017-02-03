@@ -37,4 +37,33 @@ Let \(\nu = d, m = \mu\) and \(s = \sqrt{\eta/\kappa}\), we have a Student t dis
 p(\theta) \propto \left(1 + \frac{1}{\nu}\frac{(\theta-m)^2}{s^2}\right)^{-(\nu+1)/2}\\
 \end{align*}
 
+\subsection*{B}
+The sampling model is:
+\begin{align*}
+(y_i\mid \theta, \omega) \sim N(\theta, 1/\omega)
+\end{align*}
+where \(y_1, \dots, y_n\) are the datapoints, \(\theta\) is the mean and \(\omega\) is the precision. We have that the likelihood for all the datapoints can be written as:
+\begin{align*}
+p(\mathbf{y} \mid \theta, \omega) &\propto \prod_{i=1}^n \omega^{1/2} \exp \left\lbrace -\frac{1}{2}\omega (y_i - \theta)^2 \right\rbrace\\
+&= \omega^{n/2} \exp \left\lbrace -\frac{1}{2}\omega \sum_{i=1}^n (y_i - \theta)^2 \right\rbrace\\ 
+&= \omega^{n/2} \exp \left\lbrace -\frac{1}{2}\omega \left( \sum_{i=1}^n y_i^2 + \sum_{i=1}^n\theta^2 - 2\sum_{i=1}^n y_i\theta\right) \right\rbrace\\ 
+&= \omega^{n/2} \exp \left\lbrace -\frac{1}{2}\omega \left( \sum_{i=1}^n y_i^2 + n\theta^2 - 2n\overline{y}\theta + n\overline{y}^2 - n\overline{y}^2 \right) \right\rbrace\\ 
+\end{align*}
+where \(\overline{y} = \left(\sum_{i=1}^n y_i\right)/n\). Let \(S_y = \sum_{i=1}^n (y_i - \overline{y})^2\), we have:
+\begin{align*}
+S_y &= \sum_{i=1}^n y_i^2 + n \overline{y}^2 - 2 \sum_{i=1}^n y_i \overline{y}\\
+&= \sum_{i=1}^n y_i^2 - n\overline{y}^2
+\end{align*}
+Therefore, the likelihood is:
+\begin{align*}
+p(\mathbf{y} \mid \theta, \omega) &= \omega^{n/2} \exp \left\lbrace -\frac{1}{2}\omega \left[ S_y + n(\theta^2 - 2\overline{y}\theta + \overline{y}^2) \right] \right\rbrace\\ 
+&= \omega^{n/2} \exp \left\lbrace -\frac{1}{2}\omega \left[ S_y +  n (\overline{y} - \theta)^2\right] \right\rbrace\\ 
+\end{align*}
+
+The posterior is proportional to the product of the likelihood and the prior:
+\begin{align*}
+p(\theta, \omega \mid \mathbf{y}) &\propto \omega^{(d+1)/2 - 1} \exp\left\lbrace - \omega \frac{\kappa(\theta-\mu)^2}{2} \right\rbrace \exp\left\lbrace -\omega \frac{\eta}{2}\right\rbrace
+\end{align*}
+
+
 \end{document}
