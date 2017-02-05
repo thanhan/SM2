@@ -62,8 +62,47 @@ p(\mathbf{y} \mid \theta, \omega) &= \omega^{n/2} \exp \left\lbrace -\frac{1}{2}
 
 The posterior is proportional to the product of the likelihood and the prior:
 \begin{align*}
-p(\theta, \omega \mid \mathbf{y}) &\propto \omega^{(d+1)/2 - 1} \exp\left\lbrace - \omega \frac{\kappa(\theta-\mu)^2}{2} \right\rbrace \exp\left\lbrace -\omega \frac{\eta}{2}\right\rbrace
+p(\theta, \omega \mid \mathbf{y}) &\propto \omega^{(d+1)/2 - 1} \exp\left\lbrace - \omega \frac{\kappa(\theta-\mu)^2}{2} \right\rbrace \exp\left\lbrace -\omega \frac{\eta}{2}\right\rbrace\\
+&\omega^{n/2} \exp \left\lbrace -\frac{1}{2}\omega \left[ S_y +  n (\overline{y} - \theta)^2\right] \right\rbrace\\ 
+&= \omega^{(d+n+1)/2 - 1}\exp\left\lbrace - \omega \frac{\kappa(\theta-\mu)^2 + n(\theta - \overline{y})^2}{2} \right\rbrace \exp\left\lbrace -\omega \frac{\eta + S_y}{2}\right\rbrace\\
+\end{align*}
+
+We also have:
+\begin{align*}
+\kappa(\theta-\mu)^2 + n (\theta - \overline{y})^2 &= \kappa\theta^2 + \kappa\mu^2 - 2\kappa\theta\mu + n\theta^2 + n\overline{y}^2 - 2\theta\overline{y}\\
+&= (\kappa + n)\theta^2 - 2\theta(\kappa\mu + \overline{y}) + (\kappa\mu^2 + n\overline{y}^2)\\
+&=(\kappa+n)\left( \theta^2 - 2 \theta \frac{\kappa\mu + \overline{y}}{\kappa + n} + \frac{(\kappa\mu + \overline{y})^2}{(\kappa + n)^2} \right) - \frac{(\kappa\mu + \overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
+&= (\kappa+n)\left( \theta^2 -\frac{\kappa\mu + \overline{y}}{\kappa + n}\right)^2 - \frac{(\kappa\mu + \overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
 \end{align*}
 
 
+Therefore, the posterior is:
+\begin{align*}
+p(\theta, \omega \mid \mathbf{y}) &\propto \omega^{(d^*+1)/2 - 1} \exp\left\lbrace - \omega \frac{\kappa^*(\theta-\mu^*)^2}{2} \right\rbrace \exp\left\lbrace -\omega \frac{\eta^*}{2}\right\rbrace\\
+\end{align*}
+where:
+\begin{align*}
+&d^* = d + n\\
+&\kappa^* = \kappa + n\\
+&\mu^* = \frac{\kappa\mu + \overline{y}}{\kappa + n}\\
+&\eta^* = \eta - \frac{(\kappa\mu + \overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
+\end{align*}
+
+\subsection*{C}
+The conditional distribution is:
+\begin{align*}
+p(\theta \mid \mathbf{y}, \omega) &\propto \exp\left\lbrace - \omega \frac{\kappa^*(\theta-\mu^*)^2}{2} \right\rbrace
+\end{align*}
+We see that this is a Normal distribution with mean \(\mu^*\) and variance \(1/(\omega\kappa^*)\).
+
+\subsection*{D}
+The marginal is:
+\begin{align*}
+p(\omega \mid \mathbf{y}) = \int_{-\infty}^{\infty} p(\omega, \theta \mid \mathbf{y}) d\theta
+\end{align*}
+
+\subsection*{E}
+
+\subsection*{F}
+FALSE. As \(\kappa\) approaches \(0\), the Normal prior on \(\theta\) approaches a point distribution but the density at that point is infinite. As \(d\) and \(\eta\) approach \(0\), the Gamma prior on \(\omega\) also approach a point distribution with infinite density.
 \end{document}
