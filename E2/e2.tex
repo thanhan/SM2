@@ -20,7 +20,7 @@
 \subsection*{A}
 The joint prior over the mean parameter \(\theta\) and precision parameter \(\omega\) is:
 \begin{align*}
-p(\theta, \omega) \approx \omega^{(d+1)/2-1} \exp \left\lbrace -\omega\frac{\kappa(\theta-\mu)^2}{2}\right\rbrace \exp \left\lbrace -\omega\frac{\eta}{2} \right\rbrace
+p(\theta, \omega) \propto \omega^{(d+1)/2-1} \exp \left\lbrace -\omega\frac{\kappa(\theta-\mu)^2}{2}\right\rbrace \exp \left\lbrace -\omega\frac{\eta}{2} \right\rbrace
 \end{align*}
 To get the marginal prior, we integrate out the parameter \(\omega\):
 \begin{align*}
@@ -96,13 +96,25 @@ p(\theta \mid \mathbf{y}, \omega) &\propto \exp\left\lbrace - \omega \frac{\kapp
 We see that this is a Normal distribution with mean \(\mu^*\) and variance \(1/(\omega\kappa^*)\).
 
 \subsection*{D}
-The marginal is:
+The marginal posterior of \(\omega\) is:
 \begin{align*}
-p(\omega \mid \mathbf{y}) = \int_{-\infty}^{\infty} p(\omega, \theta \mid \mathbf{y}) d\theta
+p(\omega \mid \mathbf{y}) &= \int_{-\infty}^{\infty} p(\omega, \theta \mid \mathbf{y}) d\theta\\
+&\propto \omega^{(d^*+1)/2 - 1}\exp\left\lbrace -\omega \frac{\eta^*}{2}\right\rbrace \int_{-\infty}^{\infty} \exp\left\lbrace - \omega \frac{\kappa^*(\theta-\mu^*)^2}{2} \right\rbrace d\theta\\
+&\propto \omega^{(d^*+1)/2 - 1}\exp\left\lbrace -\omega \frac{\eta^*}{2}\right\rbrace \tag{Gaussian integral}
 \end{align*}
-
+We see that this marginal is a Gamma distribution with parameter \((d^*/2, \eta^*/2)\).
 \subsection*{E}
+The marginal posterior of \(\theta\) is:
+\begin{align*}
+p(\theta \mid \mathbf{y}) &= \int_0^{\infty} p(\theta, \omega \mid \mathbf{y}) d\omega\\
+&= \int_0^{\infty} \omega^{(d^*+1)/2-1} \exp \left\lbrace -\omega\frac{\kappa^*(\theta-\mu^*)^2 + \eta^*}{2}\right\rbrace\\
+\end{align*}
+This is the same integral in part A. By the results in A, we can see that this marginal is a Student t distribution with parameters \(\nu = d^*, m = \mu^*\) and \(s = \sqrt{\eta^*/\kappa^*}\).
 
 \subsection*{F}
 FALSE. As \(\kappa\) approaches \(0\), the Normal prior on \(\theta\) approaches a point distribution but the density at that point is infinite. As \(d\) and \(\eta\) approach \(0\), the Gamma prior on \(\omega\) also approach a point distribution with infinite density.
+
+\subsection*{G}
+
+
 \end{document}
