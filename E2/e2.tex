@@ -69,10 +69,10 @@ p(\theta, \omega \mid \mathbf{y}) &\propto \omega^{(d+1)/2 - 1} \exp\left\lbrace
 
 We also have:
 \begin{align*}
-\kappa(\theta-\mu)^2 + n (\theta - \overline{y})^2 &= \kappa\theta^2 + \kappa\mu^2 - 2\kappa\theta\mu + n\theta^2 + n\overline{y}^2 - 2\theta\overline{y}\\
-&= (\kappa + n)\theta^2 - 2\theta(\kappa\mu + \overline{y}) + (\kappa\mu^2 + n\overline{y}^2)\\
-&=(\kappa+n)\left( \theta^2 - 2 \theta \frac{\kappa\mu + \overline{y}}{\kappa + n} + \frac{(\kappa\mu + \overline{y})^2}{(\kappa + n)^2} \right) - \frac{(\kappa\mu + \overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
-&= (\kappa+n)\left( \theta^2 -\frac{\kappa\mu + \overline{y}}{\kappa + n}\right)^2 - \frac{(\kappa\mu + \overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
+\kappa(\theta-\mu)^2 + n (\theta - \overline{y})^2 &= \kappa\theta^2 + \kappa\mu^2 - 2\kappa\theta\mu + n\theta^2 + n\overline{y}^2 - 2n\theta\overline{y}\\
+&= (\kappa + n)\theta^2 - 2\theta(\kappa\mu + n\overline{y}) + (\kappa\mu^2 + n\overline{y}^2)\\
+&=(\kappa+n)\left( \theta^2 - 2 \theta \frac{\kappa\mu + n\overline{y}}{\kappa + n} + \frac{(\kappa\mu + n\overline{y})^2}{(\kappa + n)^2} \right) - \frac{(\kappa\mu + n\overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
+&= (\kappa+n)\left( \theta^2 -\frac{\kappa\mu + n\overline{y}}{\kappa + n}\right)^2 - \frac{(\kappa\mu + n\overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
 \end{align*}
 
 
@@ -84,8 +84,14 @@ where:
 \begin{align*}
 &d^* = d + n\\
 &\kappa^* = \kappa + n\\
-&\mu^* = \frac{\kappa\mu + \overline{y}}{\kappa + n}\\
-&\eta^* = \eta - \frac{(\kappa\mu + \overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
+&\mu^* = \frac{\kappa\mu + n\overline{y}}{\kappa + n}\\
+\end{align*}
+and
+\begin{align*}
+\eta^* &= \eta + S_y - \frac{(\kappa\mu + n\overline{y})^2}{\kappa + n} + (\kappa\mu^2 + n\overline{y}^2)\\
+&= \eta + S_y + \frac{(\kappa+n)(\kappa\mu^2 + n\overline{y}^2) - \kappa^2\mu^2 - n^2\overline{y}^2 + 2\kappa n\mu \overline{y} }{\kappa + n}\\
+&= \eta + S_y + \frac{\kappa n\mu^2 + \kappa n\overline{y}^2 + 2\kappa n\mu \overline{y} }{\kappa + n}\\
+&= \eta + S_y + \frac{\kappa n (\mu + \overline{y})^2}{\kappa + n}
 \end{align*}
 
 \subsection*{C}
@@ -119,7 +125,25 @@ By the results in D and E, we see that when the prior parameters approach \(0\),
 
 
 \subsection*{H}
+The classical frequentest confidence interval for \(\theta\) is:
+\begin{align*}
+\overline{y} \pm t^*\frac{\sqrt{S_y}}{\sqrt{n(n-1)}}
+\end{align*}
 
+%the sampling model approaches a Normal distribution with infinite variance. 
+As the prior parameters \(\kappa, d, \eta\) approach \(0\), we have the Bayesian credible interval for \(\theta\) is:
+\begin{align*}
+m \pm t^*s
+\end{align*}
+from the results in B and E, we have
+\begin{align*}
+m = \mu^* = \overline{y}
+\end{align*}
+and
+\begin{align*}
+s = \sqrt{\eta^*/\kappa} = \sqrt{\frac{S_y + \overline{y}/n}{n}}
+\end{align*}
+We see that this is different from the classical confidence interval.
 \section{The conjugate Gaussian linear model}
 \subsection*{A}
 \begin{align*}
