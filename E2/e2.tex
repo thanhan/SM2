@@ -146,8 +146,12 @@ s = \sqrt{\eta^*/\kappa} = \sqrt{\frac{S_y + \overline{y}/n}{n}}
 We see that this is different from the classical confidence interval.
 \section{The conjugate Gaussian linear model}
 \subsection*{A}
+The conditional posterior is proportional to the conditional prior times the likelihood:
 \begin{align*}
 p(\beta \mid \mathbf{y}, \omega) &\propto p(\beta \mid \omega) p(\mathbf{y} \mid \beta, \omega)\\
+&= N(\beta; m, (\omega K)^{-1}) N(\mathbf{y}; X\beta, (\omega\Lambda)^{-1})\\
+&\propto \omega^{1/2} K^{1/2} \exp \left\lbrace\frac{1}{2}(\beta - m)^T\omega K (\beta - m) \right\rbrace \\
+&  \omega^{1/2} \Lambda^{1/2} \exp \left\lbrace\frac{1}{2}(\mathbf{y} - X\beta)^T\omega \Lambda (\mathbf{y} - X\beta) \right\rbrace 
 \end{align*}
 
 
