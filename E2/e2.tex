@@ -29,10 +29,10 @@ p(\theta) &\propto \int_0^{\infty} \omega^{(d+1)/2-1} \exp \left\lbrace -\omega\
 &= \left(\frac{\eta}{2} + \frac{\kappa(\theta-\mu)^2}{2}\right)^{-(d+1)/2} \\
 &= \left(1 + \frac{\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2} \left(\frac{\eta}{2}\right)^{-(d+1)/2} \\
 &\propto \left(1 + \frac{\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2}\\
-&=\left(1 + \frac{1}{d}\frac{\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2}\\
+&=\left(1 + \frac{1}{d}\frac{d\kappa(\theta-\mu)^2}{\eta}\right)^{-(d+1)/2}\\
 \end{align*}
 
-Let \(\nu = d, m = \mu\) and \(s = \sqrt{\eta/\kappa}\), we have a Student t distribution with \(\nu\) degrees of freedom and scale \(s\):
+Let \(\nu = d, m = \mu\) and \(s = \sqrt{\eta/(d\kappa)}\), we have a Student t distribution with \(\nu\) degrees of freedom and scale \(s\):
 \begin{align*}
 p(\theta) \propto \left(1 + \frac{1}{\nu}\frac{(\theta-m)^2}{s^2}\right)^{-(\nu+1)/2}\\
 \end{align*}
@@ -146,15 +146,86 @@ s = \sqrt{\eta^*/\kappa} = \sqrt{\frac{S_y + \overline{y}/n}{n}}
 We see that this is different from the classical confidence interval.
 \section{The conjugate Gaussian linear model}
 \subsection*{A}
-The conditional posterior is proportional to the conditional prior times the likelihood:
+%The conditional posterior is proportional to the conditional prior times the likelihood:
 \begin{align*}
-p(\beta \mid \mathbf{y}, \omega) &\propto p(\beta \mid \omega) p(\mathbf{y} \mid \beta, \omega)\\
+p(\beta, \mathbf{y} \mid \omega) &= p(\beta \mid \omega) p(\mathbf{y} \mid \beta, \omega)\\
 &= N(\beta; m, (\omega K)^{-1}) N(\mathbf{y}; X\beta, (\omega\Lambda)^{-1})\\
-&\propto \omega^{1/2} K^{1/2} \exp \left\lbrace\frac{1}{2}(\beta - m)^T\omega K (\beta - m) \right\rbrace \\
-&  \omega^{1/2} \Lambda^{1/2} \exp \left\lbrace\frac{1}{2}(\mathbf{y} - X\beta)^T\omega \Lambda (\mathbf{y} - X\beta) \right\rbrace 
+&\propto \omega^{p/2} K^{p/2} \exp \left\lbrace\frac{1}{2}(\beta - m)^T\omega K (\beta - m) \right\rbrace \\
+&  \omega^{n/2} \Lambda^{n/2} \exp \left\lbrace\frac{1}{2}(\mathbf{y} - X\beta)^T\omega \Lambda (\mathbf{y} - X\beta) \right\rbrace \\
+&= \omega^{(n+p)/2} K^{p/2} \Lambda^{n/2} \exp \left\lbrace \frac{1}{2}\omega E  \right\rbrace \\
+\end{align*}
+where we have let \(E\) be the sum of two quadratic forms inside the exponent:
+\begin{align*}
+E &= \beta^T K \beta  - 2 \beta^T K m + m^T K m + \mathbf{y}^T \Lambda \mathbf{y} - 2 \beta^T X^T \Lambda \mathbf{y}  + \beta^T X^T \Lambda X \beta\\
+%&= \beta^T (K + X^T\Lambda X) \beta - 2 \beta^T ( X^T \Lambda) \mathbf{y} - 2 \beta K m
+&= \begin{pmatrix}
+\beta \\ \mathbf{y}
+\end{pmatrix}^T
+\begin{pmatrix}
+K + X^T\Lambda X & -X^T\Lambda\\
+-\Lambda^T X & \Lambda
+\end{pmatrix}
+\begin{pmatrix}
+\beta \\ \mathbf{y}
+\end{pmatrix}
++ \mathrm{const}
+\end{align*}
+where we have ignored linear terms in \(\beta\) and \(\mathbf{y}\). We then have that (given \(\omega\)) \(\beta\) and \(\mathbf{y}\) are jointly Normal:
+\begin{align*}
+\begin{pmatrix}
+\beta \\ \mathbf{y}
+\end{pmatrix} \sim N\left( \begin{pmatrix}
+m \\ Xm
+\end{pmatrix}, \begin{pmatrix}
+\omega K + \omega X^T\Lambda X & - \omega X^T\Lambda\\
+-\omega \Lambda^T X & \omega \Lambda
+\end{pmatrix}^{-1} \right)
+\end{align*}
+
+Using the conditional Normal equations, we have that \(p(\beta \mid \mathbf{y}, \omega)\) is Normal with mean:
+\begin{align*}
+m^* &= m + (\omega K + \omega X^T\Lambda X)^{-1}(-\omega X^T \Lambda)(Xm - \mathbf{y})\\
+&= m + (K + X^T\Lambda X)^{-1}(-X^T \Lambda)(Xm - \mathbf{y})\\
+\end{align*}
+and variance:
+\begin{align*}
+(\omega K^*)^{-1} = (\omega K + \omega X^T\Lambda X)^{-1}
 \end{align*}
 
 
+\subsection*{B}
+We have that \(p(\mathbf{y} \mid \omega)\) is Normal with mean \(X m\) and variance:
+\begin{align*}
+\mbox{var}(X\beta + \epsilon) &= X \mbox{var}(\beta)X^T + (\omega\Lambda)^{-1}\\
+&= X (\omega K)^{-1}X^T + (\omega\Lambda)^{-1}\\
+\end{align*}
 
+We then have:
+\begin{align*}
+p(\omega \mid \mathbf{y}) &\propto p(\omega)  p(\mathbf{y} \mid \omega) \\
+&\propto \omega^{d/2 - 1} \exp \left\lbrace - \omega\frac{\eta}{2} \right\rbrace \omega^{n/2} \exp \left\lbrace - \omega\frac{1}{2} (\mathbf{y} - Xm)^T (XK^{-1}X^T + \Lambda^{-1})^{-1} (\mathbf{y} - Xm) \right\rbrace
+\end{align*}
+We see that this distribution is Gamma with parameter \(d^*/2\) and \(\eta^*/2\) where:
+\begin{align*}
+d^* &= d + n\\
+\eta^* &= \eta +  (\mathbf{y} - Xm)^T (XK^{-1}X^T + \Lambda^{-1})^{-1} (\mathbf{y} - Xm)
+\end{align*}
 
+\subsection*{C}
+\begin{align*}
+p(\beta \mid \mathbf{y}) &= \int_{0}^{\infty} p(\beta \mid \mathbf{y}, \omega) p(\omega \mid \mathbf{y}) d\omega\\
+& \int_{0}^{\infty} \omega^{(d+n+p)/2} \exp \left\lbrace -\frac{\omega}{2}(\beta - m^*)^T K^* (\beta - m^*) \right\rbrace \exp \left\lbrace -\frac{\omega}{2} \eta^* \right\rbrace
+\end{align*}
+This is an integral over a Normal gamma distribution. From previous results, we see that it is a Student t distribution:
+\begin{align*}
+p(\beta \mid \mathbf{y}) = \left(1 + \frac{1}{\nu}\frac{(\beta-\mu)^2}{s^2}\right)^{-(\nu+1)/2}\\
+\end{align*}
+where 
+\begin{align*}
+\nu = d + n + p\\
+\mu = m^*\\
+s = \sqrt{\eta^*}\\
+\end{align*}
+
+\subsection*{D}
 \end{document}
