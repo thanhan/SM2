@@ -11,7 +11,9 @@ n = nrow(data)
 p = 2
 
 Lambda = diag(n)
-K = diag(0.1, 0.1)
+K = diag(c(0.01, 0.01))
 m = rep(0, p)
 
-beta = m - solve(K + T(x) %*% Lambda %*% x ) (T(x) %*% Lambda) (X %*% m - y)
+
+beta = m - solve(K + t(x) %*% Lambda %*% x ) %*% (t(x) %*% Lambda) %*% (x %*% m - y)
+abline(beta, col = 'blue')
