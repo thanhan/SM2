@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour}
+    }
+
+\lstset{style=mystyle}
+
+\title{Statistical Modeling 2 \\ Exercise 3}
+
+\begin{document}
+\maketitle
+\section*{Basic concepts}
+\begin{align*}
+\mbox{MSE}(\hat{f}, f) &= E\{[f(x) - \hat{f}(x)]^2\}\\
+&= E [ f(x)^2 + \hat{f}(x)^2 - 2f(x)\hat{f}(x)]\\
+&=  f(x)^2 + E[\hat{f}(x)^2] - E[\hat{f}(x)]^2 + E[\hat{f}(x)]^2 - 2 f(x) E[\hat{f}(x)]\\
+&= \{E[\hat{f}(x)^2] - E[\hat{f}(x)]^2\} + \{f(x)^2 + E[\hat{f}(x)]^2 - 2 f(x) E[\hat{f}(x)]\}\\
+&= V + B^2
+\end{align*}
+
+
+\section*{Curve fitting by linear smoothing}
+\subsection*{A}
+In the least square estimate, we minimize:
+\begin{align*}
+L = \sum_{i=1}^n (\hat{\beta}x_i - y_i)^2
+\end{align*}
+We take the derivative and set to \(0\):
+\begin{align*}
+\partial L / \partial \hat{\beta} &= \sum_{i=1}^n 2 (\hat{\beta}x_i - y_i) x_i = 0\\
+&\implies \hat{\beta}(\sum_{i=1}^n x_i^2) - \sum_{i=1}^n y_i x_i = 0\\
+&\implies \hat{\beta} = \frac{\sum_{i=1}^n y_i x_i}{ \sum_{i=1}^n x_i^2}
+\end{align*}
+We have that the prediction is:
+\begin{align*}
+\hat{f}(x^*) &= \hat{\beta} x^*\\
+&= \frac{\sum_{i=1}^n x_i x^* y_i}{ \sum_{i=1}^n x_i^2}\\
+&= \sum_{i=1}^n w(x_i, x^*) y_i 
+\end{align*}
+where
+\begin{align*}
+w(x_i, x^*) = \frac{x_i x^*}{ \sum_{i=1}^n x_i^2}
+\end{align*}
+
+\end{document}
