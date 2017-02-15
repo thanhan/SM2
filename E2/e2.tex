@@ -116,13 +116,13 @@ The marginal posterior of \(\theta\) is:
 p(\theta \mid \mathbf{y}) &= \int_0^{\infty} p(\theta, \omega \mid \mathbf{y}) d\omega\\
 &= \int_0^{\infty} \omega^{(d^*+1)/2-1} \exp \left\lbrace -\omega\frac{\kappa^*(\theta-\mu^*)^2 + \eta^*}{2}\right\rbrace\\
 \end{align*}
-This is the same integral in part A. By the results in A, we can see that this marginal is a Student t distribution with parameters \(\nu = d^*, m = \mu^*\) and \(s = \sqrt{\eta^*/\kappa^*}\).
+This is the same integral in part A. By the results in A, we can see that this marginal is a Student t distribution with parameters \(\nu = d^*, m = \mu^*\) and \(s = \sqrt{\eta^*/(\kappa^* d^*)}\).
 
 \subsection*{F}
 FALSE. As \(\kappa\) approaches \(0\), the Normal prior on \(\theta\) approaches a point distribution but the density at that point is infinite. As \(d\) and \(\eta\) approach \(0\), the Gamma prior on \(\omega\) also approach a point distribution with infinite density.
 
 \subsection*{G}
-By the results in D and E, we see that when the prior parameters approach \(0\), the posterior parameters are not \(0\) then \(p(\theta \mid \mathbf{y})\) and \(p(\omega \mid \mathbf{y})\) are valid distribution.
+TRUE. By the results in D and E, we see that when the prior parameters approach \(0\), the posterior parameters are not \(0\) then \(p(\theta \mid \mathbf{y})\) and \(p(\omega \mid \mathbf{y})\) are valid distribution.
 
 
 \subsection*{H}
@@ -142,7 +142,7 @@ m = \mu^* = \overline{y}
 \end{align*}
 and
 \begin{align*}
-s = \sqrt{\eta^*/\kappa} = \sqrt{\frac{S_y + \overline{y}/n}{n}}
+s = \sqrt{\eta^*/(\kappa d^*)} = \sqrt{\frac{S_y}{n^2}}
 \end{align*}
 We see that this is different from the classical confidence interval.
 \section{The conjugate Gaussian linear model}
@@ -238,6 +238,21 @@ Code: blr.r
 
 \section*{A heavy-tailed error model}
 \subsection*{A}
-With the Gamma parameters \(\lambda\) integrated out, the marginal distribution over \(y_i\) is Student t.
+With the Gamma parameters \(\lambda\) integrated out, the marginal distribution over \(y_i\) is Student t. It has a wider tail and is more robust to outliers.
+
+\subsection*{B}
+\begin{align*}
+p(\lambda_i \mid \mathbf{y}, \beta, \omega) & \propto p(\lambda_i, y_i, \beta, \omega)\\
+&= p(\omega) p(\lambda_i) p(\beta \mid \omega) p(y_i |\beta , \omega, \lambda_i)\\
+&\propto p(\lambda_i)  p(y_i |\beta , \omega, \lambda_i)\\
+&\propto \lambda_i ^{h/2 - 1} \exp \left(- \lambda_i h/2 \right) (\omega \lambda_i)^{1/2} \exp \left[ -\frac{1}{2} \omega \lambda_i (X_i^T\beta - y_i)^2 \right]\\
+&\propto \mathrm{Gamma}\left(\frac{h+1}{2}, \frac{1}{2}[h + \omega (X_i^T\beta - y_i)^2]\right)
+\end{align*}
+\subsection*{C}
+Code: heavy\_tail.r
+\begin{figure}[h!]
+\includegraphics[width=\linewidth]{heavy_tail.jpeg}
+\caption{Regression line fitted by Gibbs sampling.}
+\end{figure}
 
 \end{document}
