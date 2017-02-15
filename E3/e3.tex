@@ -50,6 +50,8 @@ where
 w(x_i, x^*) = \frac{x_i x^*}{ \sum_{i=1}^n x_i^2}
 \end{align*}
 
+This weight function weights examples by the product with predictors, using all the points in the dataset. The K nearest function weights the \(K\) nearest neighbors equally and ignore all other points. 
+
 \subsection*{B}
 Code: kernel.r
 
@@ -70,5 +72,5 @@ Code: kernel.r
 \caption{Bandwidth \(h = 1\)}
 \end{figure}
 
-
+The bandwidth \(h\) affects the smoothness of the prediction line. With smaller \(h\), more weight is given to neighbor points and the line fluctuates. With larger \(h\), more weight is given to points that are further away, resulting in a smoother line.
 \end{document}
