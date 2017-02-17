@@ -229,12 +229,17 @@ s = \sqrt{\eta^*}\\
 \end{align*}
 
 \subsection*{D}
-Code: blr.r
+\textsc{Code: blr.r}
+
+
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{blm.jpeg}
 \caption{Frequentest regression line in black and Bayesian regression line in blue.}
+\label{fig:blm}
 \end{figure}
 
+\noindent
+\textbf{Figure \ref{fig:blm}:} The two lines (Frequentest and Bayesian) are close on the left (Defense spending from \(0.00\) to \(0.10\)), where most of the data points are. On the right ( Defense spending from \(0.10\)), there is a greater difference, likely due to the few points available. 
 
 \section*{A heavy-tailed error model}
 \subsection*{A}
@@ -249,10 +254,15 @@ p(\lambda_i \mid \mathbf{y}, \beta, \omega) & \propto p(\lambda_i, y_i, \beta, \
 &\propto \mathrm{Gamma}\left(\frac{h+1}{2}, \frac{1}{2}[h + \omega (X_i^T\beta - y_i)^2]\right)
 \end{align*}
 \subsection*{C}
-Code: heavy\_tail.r
+\textsc{Code: heavy\_tail.r}
+
 \begin{figure}[h!]
 \includegraphics[width=\linewidth]{heavy_tail.jpeg}
 \caption{Regression line fitted by Gibbs sampling.}
+\label{fig:heavy}
 \end{figure}
+
+\noindent
+\textbf{Figure \ref{fig:heavy}:} Compare to the lines in Figure \ref{fig:blm}, this line seems to be less affected by the outliers.
 
 \end{document}
