@@ -81,3 +81,25 @@ run = function(h = 0.01){
   
 }
 
+# Do cross validation:
+cv = function(h = 0.1, r = 5, train_size = 100, test_size = 100){
+  temp = simulate_data(train_size, 0.5, r, sin)
+  X_train = temp[[1]]
+  Y_train = temp[[2]]
+  
+  
+  temp = simulate_data(test_size, 0.5, r, sin)
+  X_test = temp[[1]]
+  Y_test = temp[[2]]
+  
+  sq_error = 0
+  for (i in 1:test_size){
+    x_star = X_test[i]
+    y_star = p = predict(X_train, Y_train, x_star, h)
+    sq_error = sq_error + (y_star - Y_test[i])^2
+  }
+  
+  sq_error = sq_error / test_size
+  return (sqrt(sq_error))
+}
+
