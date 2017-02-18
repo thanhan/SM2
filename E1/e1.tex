@@ -208,10 +208,33 @@ E[\exp(t^Tx)] = \exp(t^T\mu + t^T\Sigma t/2)
 \noindent
 {\bf (only if)} We have that \(z = a^T x\) is normally distributed:
 \begin{align*}
-\mathrm{MGF}_z(s) = E[\exp(sa^Tx)] = \exp(ms + vs^2/2)
+\mathrm{M}_z(s) = E[\exp(sa^Tx)] = \exp(ms + vs^2/2)
+\end{align*}
+Where
+\begin{align*}
+m = E(z) = E(a^Tx) = a^T E(x) = a^T \mu\\
+v = Var(z) = Var(a^Tx) = a^T Var(x) a = a^T \Sigma a
 \end{align*}
 Consider:
+\begin{align*}
+\mathrm{M}_{z}(s) = \exp(a^T\mu s + s (a^T\Sigma a)^2/2)
+\end{align*}
+Let \(s =1\), we have:
+\begin{align*}
+\mathrm{M}_{z}(s) = \exp(a^T\mu  +  (a^T\Sigma a)^2/2)
+\end{align*}
 
+\noindent
+{\bf (if)} We have the MGF of \(x\):
+\begin{align*}
+M_x(t) = E \exp (t^Tx) = \exp(t^T\mu + t^T\Sigma t/2)
+\end{align*}
+Let \(a\) be a non zero vector. Let \(z = a^Tx\), then
+\begin{align*}
+M_z(t) = E \exp (tz) &= E \exp (t a^T x)\\
+&= \exp(ta^T \mu + ta^T\Sigma ta^T /2)\\
+&= \exp(t(a^T \mu) + t^2 (a^T\Sigma a^T) /2)\\
+\end{align*}
 
 
 \subsection*{D}
