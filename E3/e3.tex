@@ -87,5 +87,33 @@ For the smooth function, I use \(x^2\); for the wiggly function, I use \(sin(10x
 \caption{Cross Validation}
 \end{figure}
 
+\section*{Local polynomial regression}
+\subsection*{A}
+Let \(R_{x}\) be the matrix whose \( (i,j) \) entry is \( (x_i - x)^{j-1}\). We have that
+\begin{align*}
+g_x(x_i; a) = R_{x,i}^T a
+\end{align*}
+where \(a\) is the column vector of coefficients of the polynomial \(g\) and \(R_{x,i} \) is the row \(i\) of \(R_{x}\). We want to minimize:
+
+\begin{align*}
+&\sum_{i=1}^n w_i \{y_i - g_x(x_i; a)\}^2\\
+&= \sum_{i=1}^n w_i \{y_i - R_{x,i}^T a\}^2\\
+&= \sum_{i=1}^n \frac{1}{h}K\left(\frac{x_i - x}{h}\right)  \{y_i - R_{x,i}^T a\}^2\\
+&= (R_x a - y)^T K_x (R_x a - y)\\
+&= a^TR_x^T K_x R_x a  - a^TR_x^T K_x y -  y^T K_x R_x a + y^Ty\\
+&= F_x
+\end{align*}
+We take the derivative and set to zero:
+%\begin{align*}
+%&\frac{\partial F_x} {\partial a} = \sum_{i=1}^n \frac{1}{h}K\left(\frac{x_i - x}{h}\right) 2 (R_{x,i}^T a - y_i) R_{x,i} = 0\\
+%&\implies \sum_{i=1}^n \frac{1}{h}K_{x, i} R_{x,i}^T a R_{x,i} - \sum_{i=1}^n \frac{1}{h}K_{x, i} y_i R_{x,i} = 0 \\
+%&\implies \sum_{i=1}^n \frac{1}{h}K_{x, i} R_{x,i,j} a_j R_{x,i,j} - \sum_{i=1}^n \frac{1}{h}K_{x, i} y_i R_{x,i,j} = 0 \hspace{0.5cm} \forall j\\
+%&\implies a_j = \frac{\sum_{i=1}^n K_{x, i} y_i R_{x,i,j} } { \sum_{i=1}^n K_{x, i} R_{x,i,j}^2   }
+%&\implies K_x R_x R_x a
+%\end{align*}
+\begin{align*}
+\partial F_x / \partial a = 
+\end{align*}
+
 
 \end{document}
