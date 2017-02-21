@@ -55,6 +55,8 @@ This weight function weights examples by the product with predictors, using all 
 \subsection*{B}
 Code: kernel.r
 
+\noindent
+I use the function \textsf{sin} from $-5$ to $5$ with $100$ samples and try three bandwidths: \(h = 0.01, h = 0.1, h = 1\).
 
 \begin{figure}[h!]
 \includegraphics[width = \textwidth]{h001.jpeg}
@@ -72,11 +74,14 @@ Code: kernel.r
 \caption{Bandwidth \(h = 1\)}
 \end{figure}
 
+
+
+
 The bandwidth \(h\) affects the smoothness of the prediction line. With smaller \(h\), more weight is given to neighbor points and the line fluctuates. With larger \(h\), more weight is given to points that are further away, resulting in a smoother line.
 
 \section*{Cross Validation}
 \subsection*{B}
-
+For the smooth function, I use \(x^2\); for the wiggly function, I use \(sin(10x)\). `Not so noisy' has a Normal noise of \(0.05\), `noisy' has a Normal noise of \(0.25\). I generate \(100\) points in train and \(100\) points in test. The bandwidth \(h\) is varied from \(0.01\) to \(0.20\). For the smooth function with less noise, the RMSE is stable across different settings of \(h\). But for other cases, using the right \(h\) seems to improve RMSE significantly.
 \begin{figure}[h!]
 \includegraphics[width = \textwidth]{cv.jpeg}
 \caption{Cross Validation}
