@@ -89,7 +89,7 @@ For the smooth function, I use \(x^2\); for the wiggly function, I use \(sin(10x
 
 \section*{Local polynomial regression}
 \subsection*{A}
-Let \(R_{x}\) be the matrix whose \( (i,j) \) entry is \( (x_i - x)^{j-1}\). We have that
+Let \(R_{x}\) be a \(n \times D\) matrix whose \( (i,j) \) entry is \( (x_i - x)^{j-1}\). We have that
 \begin{align*}
 g_x(x_i; a) = R_{x,i}^T a
 \end{align*}
@@ -103,6 +103,7 @@ where \(a\) is the column vector of coefficients of the polynomial \(g\) and \(R
 &= a^TR_x^T K_x R_x a  - a^TR_x^T K_x y -  y^T K_x R_x a + y^Ty\\
 &= F_x
 \end{align*}
+where \(K_x\) is the diagonal matrix whose \( (i,i) \) entry is \(\frac{1}{h}K(\frac{x_i - x}{h})\).
 We take the derivative and set to zero:
 %\begin{align*}
 %&\frac{\partial F_x} {\partial a} = \sum_{i=1}^n \frac{1}{h}K\left(\frac{x_i - x}{h}\right) 2 (R_{x,i}^T a - y_i) R_{x,i} = 0\\
@@ -111,9 +112,57 @@ We take the derivative and set to zero:
 %&\implies a_j = \frac{\sum_{i=1}^n K_{x, i} y_i R_{x,i,j} } { \sum_{i=1}^n K_{x, i} R_{x,i,j}^2   }
 %&\implies K_x R_x R_x a
 %\end{align*}
+
 \begin{align*}
-\partial F_x / \partial a = 
+\partial F_x / \partial a &= 2 R_x^T K_x R_x a - 2 R_x^T K_x y = 0\\
+&\implies a = (R_x^T K_x R_x)^{-1} R_x^T K_x y
+\end{align*}
+
+The estimate at \(x\) is \(\hat{f}(x) = a_0\).
+\subsection*{B}
+For \(D=1\), we have:
+\begin{align*}
+a &= \begin{pmatrix}
+\sum_i K_{x,i} & \sum_i K_{x,i} (x_i - x)\\
+\sum_i K_{x,i} (x_i - x) & \sum_i K_{x, i} (x_i - x)^2
+\end{pmatrix}^{-1} 
+\begin{pmatrix}
+K_{x,1} & ... & K_{x,n}\\
+K_{x,1}(x_1 - x) & ... & K_{x,n}(x_n - x)\\
+\end{pmatrix} y\\
+&= \frac{1}{C}\begin{pmatrix}
+\sum_i K_{x, i} (x_i - x)^2 & -\sum_i K_{x,i} (x_i - x)\\
+-\sum_i K_{x,i} (x_i - x) &  \sum_i K_{x,i}
+\end{pmatrix}
+\begin{pmatrix}
+\sum_i K_{x,i} y_i\\
+\sum_i K_{x,i}(x_i - x) y_i\\
+\end{pmatrix}\\
+&= \frac{1}{C}\begin{pmatrix}
+s_2(x) & -s_1(x)\\
+-s_1(x) & s_0(x) 
+\end{pmatrix}
+\end{align*}
+where \(C = s_0(x) s_2(x) - s_1(x)^2\). 
+We then have:
+\begin{align*}
+a_0 &= \frac{1}{C} \left[ s_2(x) \sum_i K_{x,i} y_i - s_1(x) \sum_i K_{x,i} (x_i - x) y_i \right]\\
+&= \frac{1}{C} \left\lbrace \sum_i K_{x,i}[ s_2(x) - (x_i - x)s_1(x) ] y_i \right\rbrace
+\end{align*}
+and
+\begin{align*}
+C &= \sum_i K_{x,i} s_2(x) - \sum_i K_{x,i} (x_i - x) s_1(x)\\
+&= \sum_i K_{x,i} \left\lbrace s_2(x) - (x_i - x) s_1(x)\right\rbrace
+\end{align*}
+
+Let \( w_i = K_{x,i} \left\lbrace s_2(x) - (x_i - x)s_1(x) \right\rbrace \), we have:
+\begin{align*}
+\hat{f}(x) = \frac{\sum_i w_i y_i}{w_i}
 \end{align*}
 
 
+\subsection*{C}
+
+
 \end{document}
+
