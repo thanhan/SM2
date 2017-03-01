@@ -115,10 +115,13 @@ We take the derivative and set to zero:
 
 \begin{align*}
 \partial F_x / \partial a &= 2 R_x^T K_x R_x a - 2 R_x^T K_x y = 0\\
-&\implies a = (R_x^T K_x R_x)^{-1} R_x^T K_x y
+&\implies a= (R_x^T K_x R_x)^{-1} R_x^T K_x y
 \end{align*}
 
-The estimate at \(x\) is \(\hat{f}(x) = a_0\).
+The estimate at \(x\) is \(\hat{f}(x) = a_0 = S_x y\), where
+\begin{align*}
+S_x = e_1 (R_x^T K_x R_x)^{-1} R_x^T K_x
+\end{align*}
 \subsection*{B}
 For \(D=1\), we have:
 \begin{align*}
@@ -162,6 +165,17 @@ Let \( w_i = K_{x,i} \left\lbrace s_2(x) - (x_i - x)s_1(x) \right\rbrace \), we 
 
 
 \subsection*{C}
+The mean is
+\begin{align*}
+E \hat{f}(x) = E [ S_x y ] = S_x f(X) = \sum_i S_{x,i} f(x_i)
+\end{align*}
+and the variance is:
+\begin{align*}
+\mbox{var} \hat{f}(x) &= \mbox{var} [ S_x y ] = \mbox{var} \left( \sum_i S_{x,i} (f(x_i) + e_i) \right)\\
+&= \sum_i S_{x,i}^2 \mbox{var}(e_i)\\
+&= \sum_i S_{x,i}^2 \sigma^2\\
+\end{align*}
+
 
 
 \end{document}
