@@ -176,6 +176,34 @@ and the variance is:
 &= \sum_i S_{x,i}^2 \sigma^2\\
 \end{align*}
 
+\section*{D}
+
+\section*{E}
+\textsf{Code: local\_linear.r}
+
+\section*{F}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{util_plot.jpeg}
+\caption{The data and prediction by local linear estimator}
+\label{fig:util}
+\end{figure}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{util_log.jpeg}
+\caption{The data and prediction by local linear estimator after a log transformation on the daily gasbill.}
+\label{fig:util_log}
+\end{figure}
+
+The variance is larger for temperature 20 to 60 and smaller for temperature below 20 or above 60. By taking log on the Daily gasbill, the hemoskedastic assumption is more reasonable.
+
+\section*{G}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{util_ci.jpeg}
+\caption{The data and prediction by local linear estimator after a log transformation on the daily gasbill, with the 95 \% confidence interval.}
+\label{fig:util_log}
+\end{figure}
 
 
 \end{document}
