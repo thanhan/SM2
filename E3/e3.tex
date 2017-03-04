@@ -283,5 +283,38 @@ and precision:
 \begin{align*}
 C^{-1} + 1/\sigma^2 I
 \end{align*}
+
+\subsection*{B}
+We have that \(f^* = f(x^*)\) and \(y = [y_1, \ldots, y_N]^T\)  is jointly Normal with mean \(0\) and variance:
+\begin{align*}
+\begin{pmatrix}
+C_{**} & C_{*x}\\
+C_{*x}^T & C_x + \sigma^2 I
+\end{pmatrix}
+\end{align*}
+Now given \(y\), we have that \(f^*\) is Normal with mean
+\begin{align*}
+C_{*x} (C_x + \sigma^2 I)^{-1} y
+\end{align*}
+and variance:
+\begin{align*}
+C_{**} - C_{*x} (C_x + \sigma^2 I)^{-1} C_{*x}^T
+\end{align*}
+
+From the expression for the mean, we can recognize a linear smoother with the smoothing weight \( C_{*x} (C_x + \sigma^2 I)^{-1} \).
+
+\subsection*{C}
+\begin{figure}
+\includegraphics[width=\textwidth]{util_gp_ci.jpeg}
+\caption{The data and prediction by Gaussian Process after a log transformation on the daily gasbill, with the 95 \% confidence interval.}
+\label{fig:util_log}
+\end{figure}
+
+
+\subsection*{D}
+\begin{align*}
+p(y \mid b, \tau_1^2, \tau_2^2) &= \int p(y \mid f) p( f \mid b, \tau_1^2, \tau_2^2) df\\
+&= \int p(y, f \mid b, \tau_1^2, \tau_2^2) df
+\end{align*}
 \end{document}
 

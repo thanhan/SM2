@@ -102,7 +102,12 @@ run = function(){
   r = abs(p - daily_gasbill)
   
   sigma_sq = sum(r*r) / ( n - 2 * sum(diag(H)) + sum(diag(t(H) %*% H)))
-  v = sigma_sq * sum(diag(H) * diag(H))
+
+  v = vector("numeric", length = n)  
+  for (i in 1:n){
+    v[i] = sum(H[i,] * H[i,]) * sigma_sq
+  }
+
   sd_e = v ^(0.5)
   plotCI(data$temp, p, sd_e*1.96, sd_e * 1.96,  col = 'red', add = TRUE)
   
