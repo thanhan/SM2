@@ -205,8 +205,83 @@ The variance is larger for temperature 20 to 60 and smaller for temperature belo
 \label{fig:util_log}
 \end{figure}
 
-\subsection*{Gaussian processes}
+\section*{Gaussian processes}
+\subsection*{A}
+With \(\tau^2_2\) small, the parameter \(\tau^2_1\) controls the magnitude of the function while the parameter \(b\) controls the smoothness.
+\begin{figure}
+\includegraphics[width=\textwidth]{gp_b001.jpeg}
+\includegraphics[width=\textwidth]{gp_b01.jpeg}
+\includegraphics[width=\textwidth]{gp_b1.jpeg}
+\caption{Functions sampled the a Gaussian Process with \(\tau_1^2 = 1\) and \(\tau_2^2 = 10^{-6}\). Top: \(b = 0.01\); Middle: \(b = 0.1\); Bottom: \(b = 1\). We see that the function is smoother as \(b\) increases.}
+\label{fig:gp_b}
+\end{figure}
 
+\subsection*{B}
+We have that the random variables \(f(x^*), f(x_1), \ldots, f(x_N)\) are Normal with mean \( m(x^*), m(x_1), \ldots, m(x_N)\) and variance
+\begin{align*}
+C &= \begin{pmatrix}
+C(x^*, x^*) & \ldots & C(x^*, x_N)\\
+\ldots      & \ldots & \ldots\\
+C(x_N, x^*) & \ldots & C(x_N, x_N)
+\end{pmatrix}\\
+&= \begin{pmatrix}
+C_* & C_{*x}\\
+C_{*x}^T & C_{xx}
+\end{pmatrix}
+\end{align*}
 
+Now given \( f(x_1), \ldots, f(x_N)\), we have that \(f(x^*)\) is Normal with mean \begin{align*}
+\mu_{* \mid 1..N} =  m(x^*) + C_{*x} C_{xx} ( f(x_{1..N}) - m(x_{1..N}))
+\end{align*}
+and variance:
+\begin{align*}
+C_{* \mid 1..N} = C_{*} - C_{*x} C_{xx}^{-1} C_{*x}^T
+\end{align*}
+
+\subsection*{C}
+We have:
+\begin{align*}
+p(y, \theta) &= p(y \mid \theta) p(\theta)\\
+&= N(R\theta, \Sigma) N(m, V)\\
+&\propto \exp\left( -\frac{1}{2} (y - R\theta)^T \Sigma^{-1} (y - R\theta) \right) \exp\left( -\frac{1}{2} (\theta - m)^T V^{-1} (\theta - m) \right)\\
+& = \exp\left[ -\frac{1}{2} \left( y^T\Sigma^{-1}y - 2y^T\Sigma^{-1}R\theta + \theta^TR^T\Sigma^{-1} R\theta  + (\theta - m)^T V^{-1} (\theta - m) \right) \right]\\
+\end{align*}
+
+We then see that precision matrix of \(y\) and \(\theta\):
+\begin{align*}
+C = \begin{pmatrix}
+\Sigma^{-1} & \Sigma^{-1}R \\
+R^T \Sigma^{-T} & V^{-1} + R^T\Sigma^{-1} R\\
+\end{pmatrix}
+\end{align*}
+
+\(y\) and \(\theta\) are Normal with mean \(Rm, m\) and precision \(C\).
+
+\section*{In nonparametric regression and spatial smoothing}
+\subsection*{A}
+Let \(f_x = [ f(x_1), \ldots, f(x_N)]^T\) and \( y =  [ y_1, \ldots, y_N ]^T\).
+
+\begin{align*}
+p( f_x, y) &= p( y \mid f_x ) p( f_x ) \\
+&= \prod_{i=1}^N p(y_i \mid f(x_i) ) p( f_x )\\
+&= \prod_{i=1}^N N (y_i \mid f(x_i), \sigma^2) N( f_x \mid 0, C)\\
+&= N( y \mid f_x, \sigma^2 I) N(f_x \mid 0, C)
+\end{align*}
+
+By Lemma 1 in part (C), we have that  \(y\) and \(f_x\)  are jointly Normal with mean \(0\) and precision:
+\begin{align*}
+\begin{pmatrix}
+1/\sigma^2 I & 1/\sigma^2 I\\
+1/\sigma^2 I & C^{-1} + 1/\sigma^2 I
+\end{pmatrix}
+\end{align*}
+Then the posterior of \(f_x\) given \(y\) is Normal with mean 
+\begin{align*}
+\frac{1}{\sigma^2} (C^{-1} + 1/\sigma^2 I)^{-1}  (- y)
+\end{align*}
+and precision:
+\begin{align*}
+C^{-1} + 1/\sigma^2 I
+\end{align*}
 \end{document}
 

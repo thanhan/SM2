@@ -107,3 +107,5 @@ run = function(){
   plotCI(data$temp, p, sd_e*1.96, sd_e * 1.96,  col = 'red', add = TRUE)
   
 }
+
+
