@@ -314,7 +314,12 @@ From the expression for the mean, we can recognize a linear smoother with the sm
 \subsection*{D}
 \begin{align*}
 p(y \mid b, \tau_1^2, \tau_2^2) &= \int p(y \mid f) p( f \mid b, \tau_1^2, \tau_2^2) df\\
-&= \int p(y, f \mid b, \tau_1^2, \tau_2^2) df
+&= \int N(y \mid f, \sigma^2 I) N(f \mid 0, C) df \\
+&= N(y \mid 0, C + \sigma^2 I)
+\end{align*}
+The marginal likelihood is:
+\begin{align*}
+(2\pi)^{-n/2} |C|^{-1/2} \exp \left( \frac{1}{2} y^T (C + \sigma^2 I)^{-1} y \right)
 \end{align*}
 \end{document}
 
