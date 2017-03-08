@@ -1,6 +1,6 @@
 library(MASS)
 library(plotrix)
-
+library(stats)
 
 
 # Matern(5/2)
@@ -19,16 +19,19 @@ cov_se = function(b, tau1_sq, tau2_sq, d){
   return(f1 + f2)
 }
 
+
 compute_c = function(X, b, tau1_sq, tau2_sq, cov_fun){
-  n = length(X)
+  X = as.matrix(X)
+  n = nrow(X)
+  d = as.matrix(dist(X))
   
   C = matrix(0, nrow = n, ncol = n)
   for (i in 1:n){
     for (j in 1:n){
       if (cov_fun == 'm52')
-        C[i, j] = cov_m52(b, tau1_sq, tau2_sq, abs(X[i] - X[j]))
+        C[i, j] = cov_m52(b, tau1_sq, tau2_sq, d[i,j])
       else if (cov_fun == 'se')
-        C[i, j] = cov_se(b, tau1_sq, tau2_sq, abs(X[i] - X[j]))
+        C[i, j] = cov_se(b, tau1_sq, tau2_sq, d[i,j])
     }
   }
   
@@ -56,9 +59,9 @@ run1 = function(){
 
 
 gp_predict = function(X, y, x_star, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq = 0, cov_fun = 'm52'){
-  n1 = length(x_star)
-  n2 = length(X)
-  C = compute_c(c(x_star, X), b, tau1_sq, tau2_sq, cov_fun)
+  n1 = nrow(x_star)
+  n2 = nrow(X)
+  C = compute_c(rbind(x_star, X), b, tau1_sq, tau2_sq, cov_fun)
   C_ss = C[1:n1,1:n1]
   C_sx = C[1:n1, (n1+1):(n1+n2)]
   C_xx = C[(n1+1):(n1+n2), (n1+1):(n1+n2)]
@@ -67,7 +70,7 @@ gp_predict = function(X, y, x_star, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq =
   
   m = C_sx %*% A %*% y
   
-  v = C_ss - C_sx %*% A  %*% t(C_sx)
+  v = C_ss - t(C_sx) %*% A  %*% C_sx
   
   #return (x_star)
   #return(C_xx)
@@ -89,7 +92,7 @@ run2 = function(){
   daily_gasbill = log(data$gasbill / data$billingdays)
   
   # want to predict daily_gasbill from temperature
-  X = data$temp
+  X = as.matrix(data$temp)
   y = daily_gasbill
   res = gp_predict(X, y, X,tau1_sq = 1, b = 30, cov_fun = 'se')
   m = res[[1]]
@@ -113,5 +116,26 @@ run3 = function() {
   for (tau1_sq in c(0.5, 1, 1.5, 2, 1.5, 3))
     for (b in c(5, 10, 15, 20, 25, 30))
       print (paste(tau1_sq, b, mll(X, y, tau1_sq = tau1_sq, b = b)))
+  
+}
+
+# weather dataset
+run4 = function() {
+  data = read.csv('weather.csv')
+  X = data[, 3:4]
+  y = data[, 2]
+  
+  bin_x = seq(min(X[, 1]), max(X[, 1])); len_x = length(bin_x)
+  bin_y = seq(min(X[, 2]), max(X[, 2])); len_y = length(bin_y)
+  f = matrix(0, len_x, len_y)
+  
+  for (i in 1:len_x)
+    for (j in 1:len_y){
+      x_star = data.frame(lon = bin_x[i], lat = bin_y[j])
+      res = gp_predict(X, y, x_star ,tau1_sq = 1, b = 30, cov_fun = 'se')
+      m = res[[1]]
+      v = res[[2]]    
+      f[i, j] = m
+    }
   
 }
