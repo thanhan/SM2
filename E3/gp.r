@@ -1,7 +1,8 @@
 library(MASS)
 library(plotrix)
 library(stats)
-
+library(mvtnorm)
+library(fields)
 
 # Matern(5/2)
 cov_m52 = function(b, tau1_sq, tau2_sq, d){
@@ -70,7 +71,8 @@ gp_predict = function(X, y, x_star, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq =
   
   m = C_sx %*% A %*% y
   
-  v = C_ss - t(C_sx) %*% A  %*% C_sx
+  #v = C_ss - t(C_sx) %*% A  %*% C_sx
+  v = C_ss - C_sx %*% A  %*% t(C_sx)
   
   #return (x_star)
   #return(C_xx)
@@ -80,9 +82,9 @@ gp_predict = function(X, y, x_star, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq =
 
 mll = function(X, y, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq = 0, cov_fun = 'm52'){
   C = compute_c(X, b, tau1_sq, tau2_sq, cov_fun)
-  n = length(X)
+  n = nrow(X)
   S = C + sigma_sq * diag(n)
-  return ( dmvnorm(y, mean = rep(0, n), sigma = S) )
+  return ( dmvnorm(y, mean = rep(0, n), sigma = S, log = TRUE) )
   
 }
 
@@ -125,17 +127,27 @@ run4 = function() {
   X = data[, 3:4]
   y = data[, 2]
   
-  bin_x = seq(min(X[, 1]), max(X[, 1])); len_x = length(bin_x)
-  bin_y = seq(min(X[, 2]), max(X[, 2])); len_y = length(bin_y)
+  for (tau1_sq in c(0.01, 0.5, 1, 1.5, 2, 1.5, 3, 50, 100))
+    for (b in c(0.1, 1, 5, 10, 15, 20, 25, 30))
+      print (paste(tau1_sq, b, mll(X, y, tau1_sq = tau1_sq, b = b, sigma_sq = 100)))
+  
+  
+  bin_x = seq(min(X[, 1]), max(X[, 1]), by = 0.25); len_x = length(bin_x)
+  bin_y = seq(min(X[, 2]), max(X[, 2]), by = 0.25); len_y = length(bin_y)
   f = matrix(0, len_x, len_y)
   
-  for (i in 1:len_x)
+  for (i in 1:len_x){
+    x_star = data.frame(lon = bin_x[i], lat = bin_y)
+    # for temperature
+    res = gp_predict(X, y, x_star ,tau1_sq = 3, b = 1, sigma_sq = 0.1, cov_fun = 'se')
+    
+    #for pressure
+    #res = gp_predict(X, y, x_star ,tau1_sq = 100, b = 1, sigma_sq = 100, cov_fun = 'se')
+    m = res[[1]]
+    v = res[[2]]    
     for (j in 1:len_y){
-      x_star = data.frame(lon = bin_x[i], lat = bin_y[j])
-      res = gp_predict(X, y, x_star ,tau1_sq = 1, b = 30, cov_fun = 'se')
-      m = res[[1]]
-      v = res[[2]]    
-      f[i, j] = m
+      f[i, j] = v[j]
     }
-  
+  }
+  image.plot(bin_x, bin_y, f, xlab = 'lon', ylab = 'lat')
 }
