@@ -55,7 +55,7 @@ run1 = function(){
 }
 
 
-gp_predict = function(X, y, x_star, sigma_sq = 1, b = 0.001, tau1_sq = 2, tau2_sq = 1e-6, cov_fun = 'm52'){
+gp_predict = function(X, y, x_star, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq = 0, cov_fun = 'm52'){
   n1 = length(x_star)
   n2 = length(X)
   C = compute_c(c(x_star, X), b, tau1_sq, tau2_sq, cov_fun)
@@ -63,12 +63,24 @@ gp_predict = function(X, y, x_star, sigma_sq = 1, b = 0.001, tau1_sq = 2, tau2_s
   C_sx = C[1:n1, (n1+1):(n1+n2)]
   C_xx = C[(n1+1):(n1+n2), (n1+1):(n1+n2)]
   
-  A = solve( C_xx + sigma_sq * diag(n))
+  A = solve( C_xx + sigma_sq * diag(n2))
   
   m = C_sx %*% A %*% y
-  v = C_ss - C_sx * A %*% t(C_sx)
   
+  v = C_ss - C_sx %*% A  %*% t(C_sx)
+  
+  #return (x_star)
+  #return(C_xx)
+  #return( compute_c(x_star, b, tau1_sq, tau2_sq, cov_fun))
   return(list(m, v))
+}
+
+mll = function(X, y, sigma_sq = 1, b = 10, tau1_sq = 5, tau2_sq = 0, cov_fun = 'm52'){
+  C = compute_c(X, b, tau1_sq, tau2_sq, cov_fun)
+  n = length(X)
+  S = C + sigma_sq * diag(n)
+  return ( dmvnorm(y, mean = rep(0, n), sigma = S) )
+  
 }
 
 # apply to utilities data
@@ -79,12 +91,27 @@ run2 = function(){
   # want to predict daily_gasbill from temperature
   X = data$temp
   y = daily_gasbill
-  res = gp_predict(X, y, X, sigma_sq = 0.01)
+  res = gp_predict(X, y, X,tau1_sq = 1, b = 30, cov_fun = 'se')
   m = res[[1]]
   v = res[[2]]
   
   plot(data$temp, daily_gasbill, xlab = 'Temperature', ylab = 'Log Daily gasbill', ylim = c(-3, 3))
   
   sd_e = diag(v) ^(0.5)
-  plotCI(data$temp, p, sd_e*1.96, sd_e * 1.96,  col = 'red', add = TRUE)  
+  plotCI(data$temp, m, sd_e*1.96, sd_e * 1.96,  col = 'red', add = TRUE)  
+}
+
+# optimize parameter using marginal likelihood
+run3 = function() {
+  data = read.csv('utilities.csv') 
+  daily_gasbill = log(data$gasbill / data$billingdays)
+  
+  # want to predict daily_gasbill from temperature
+  X = data$temp
+  y = daily_gasbill
+  
+  for (tau1_sq in c(0.5, 1, 1.5, 2, 1.5, 3))
+    for (b in c(5, 10, 15, 20, 25, 30))
+      print (paste(tau1_sq, b, mll(X, y, tau1_sq = tau1_sq, b = b)))
+  
 }

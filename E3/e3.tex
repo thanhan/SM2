@@ -231,7 +231,7 @@ C_{*x}^T & C_{xx}
 \end{align*}
 
 Now given \( f(x_1), \ldots, f(x_N)\), we have that \(f(x^*)\) is Normal with mean \begin{align*}
-\mu_{* \mid 1..N} =  m(x^*) + C_{*x} C_{xx} ( f(x_{1..N}) - m(x_{1..N}))
+\mu_{* \mid 1..N} =  m(x^*) + C_{*x} C_{xx}^{-1} ( f(x_{1..N}) - m(x_{1..N}))
 \end{align*}
 and variance:
 \begin{align*}
@@ -247,11 +247,11 @@ p(y, \theta) &= p(y \mid \theta) p(\theta)\\
 & = \exp\left[ -\frac{1}{2} \left( y^T\Sigma^{-1}y - 2y^T\Sigma^{-1}R\theta + \theta^TR^T\Sigma^{-1} R\theta  + (\theta - m)^T V^{-1} (\theta - m) \right) \right]\\
 \end{align*}
 
-We then see that precision matrix of \(y\) and \(\theta\):
+We then see that precision matrix of \(y\) and \(\theta\) is:
 \begin{align*}
 C = \begin{pmatrix}
-\Sigma^{-1} & \Sigma^{-1}R \\
-R^T \Sigma^{-T} & V^{-1} + R^T\Sigma^{-1} R\\
+\Sigma^{-1} & -\Sigma^{-1}R \\
+-R^T \Sigma^{-1} & V^{-1} + R^T\Sigma^{-1} R\\
 \end{pmatrix}
 \end{align*}
 
@@ -271,13 +271,13 @@ p( f_x, y) &= p( y \mid f_x ) p( f_x ) \\
 By Lemma 1 in part (C), we have that  \(y\) and \(f_x\)  are jointly Normal with mean \(0\) and precision:
 \begin{align*}
 \begin{pmatrix}
-1/\sigma^2 I & 1/\sigma^2 I\\
-1/\sigma^2 I & C^{-1} + 1/\sigma^2 I
+1/\sigma^2 I & -1/\sigma^2 I\\
+-1/\sigma^2 I & C^{-1} + 1/\sigma^2 I
 \end{pmatrix}
 \end{align*}
 Then the posterior of \(f_x\) given \(y\) is Normal with mean 
 \begin{align*}
-\frac{1}{\sigma^2} (C^{-1} + 1/\sigma^2 I)^{-1}  (- y)
+\frac{1}{\sigma^2} (C^{-1} + 1/\sigma^2 I)^{-1}  y
 \end{align*}
 and precision:
 \begin{align*}
@@ -321,5 +321,13 @@ The marginal likelihood is:
 \begin{align*}
 (2\pi)^{-n/2} |C|^{-1/2} \exp \left( \frac{1}{2} y^T (C + \sigma^2 I)^{-1} y \right)
 \end{align*}
+
+\subsection*{E}
+
+\begin{figure}
+\includegraphics[width=\textwidth]{util_gp_grid.jpeg}
+\caption{The data and prediction by Gaussian Process after a log transformation on the daily gasbill, with the 95 \% confidence interval, after optimizing the parameters by grid search.}
+\label{fig:util_log}
+\end{figure}
 \end{document}
 
