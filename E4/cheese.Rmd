@@ -1,0 +1,105 @@
+---
+title: "Cheese data"
+output:
+  html_notebook: default
+  html_document: default
+  pdf_document: default
+---
+
+Load the data
+```{r}
+library(mosaic)
+library(lme4)
+cheese = read.csv('cheese.csv')
+```
+Take log
+```{r}
+cheese$lvol = log2(cheese$vol)
+cheese$lprice = log2(cheese$price)
+```
+Look at the data
+```{r}
+plot(mean(lvol ~ store, data = cheese), xlab = 'store index', ylab = 'mean log sale volume')
+plot(xtabs(lvol ~ store, data = cheese), xlab = 'store index', ylab = 'number of observations')
+```
+Log sale volume vs. log price colored by stores:
+```{r}
+plot(cheese$lprice, cheese$lvol, col = cheese$store, xlab = 'log price', ylab = 'log sale volume')
+```
+Not display ad vs. display ad:
+```{r}
+plot(cheese$lprice, cheese$lvol, col = 1 + cheese$disp, xlab = 'log price', ylab = 'log sale volume')
+legend("topright", c('not display', 'display'), lwd=c(1.5,1.5), col = c(1, 2))
+```
+Split into train/test
+```{r}
+n = nrow(cheese)
+nt = floor(n * 0.7)
+ind <- sample(seq_len(n), size = nt)
+train = cheese[ind, ]
+test = cheese[-ind, ]
+```
+Fit a linear model on log price
+```{r}
+m0 = lm(lvol ~ lprice, data = train)
+p0 = predict(m0, test)
+sum((p0 - test$lvol)^2)/nt
+plot(test$lprice, test$lvol, col = 1, xlab = 'log price', ylab = 'log sale volume')
+abline(coef(m0))
+```
+Next fit the linear model with a parameter display
+```{r}
+m1 = lm(lvol ~ disp + lprice, data = train)
+p1 = predict(m1, test)
+sum((p1 - test$lvol)^2)/nt
+plot(test$lprice, test$lvol, col = 1 + test$disp, xlab = 'log price', ylab = 'log sale volume')
+c1 = coef(m1)
+abline(c1[1], c1[3], col = 1)
+abline(c1[1] + c1[2], c1[3], col = 2)
+legend("topright", c('not display', 'display'), lwd=c(1.5,1.5), col = c(1, 2))
+```
+Now use hierarchical model grouped by store
+```{r}
+m2 = lmer(lvol ~  (lprice | store), data = train)
+p2 = predict(m2, test)
+sum((p2 - test$lvol)^2)/nt
+```
+```{r}
+plot_line = function(m){
+  store_intercept = coef(m)$store$`(Intercept)`
+  store_slope     = coef(m)$store$lprice
+  
+  ns = length(store_intercept)
+  for (i in 1:ns)
+    abline(store_intercept[i], store_slope[i], col = i)
+  
+}
+plot(test$lprice, test$lvol, col = test$store, xlab = 'log price', ylab = 'log sale volume')
+plot_line(m2)
+```
+Next add a parameter for display
+```{r}
+m3 = lmer(lvol ~  disp + (lprice | store), data = train)
+p3 = predict(m3, test)
+sum((p3 - test$lvol)^2)/nt
+```
+Consider a particular store, we can plot its regression line and compare to:
+
+ - grand line: fit using all the stores
+ - store-only: fit using only data from that store
+```{r}
+st = 'HOUSTON - KROGER CO'
+hk = cheese[cheese$store ==  st,]
+plot(hk$lprice, hk$lvol, col = 1 + hk$disp, xlab = 'log price', ylab = 'log sale volume', ylim = c(11, 14))
+c3 = coef(m3)$store[st,]
+abline(c3$`(Intercept)`, c3$lprice, col = 1, lwd = 1)
+abline(c3$`(Intercept)` + c3$disp , c3$lprice, col = 2, lwd = 3)
+abline(c1[1], c1[3], col = 1, lwd = 5)
+abline(c1[1] + c1[2], c1[3], col = 2, lwd = 5)
+hk_lm = lm(lvol ~ disp + lprice, hk)
+c4 = coef(hk_lm)
+abline(c4[1], c4[3], col = 1, lty = 3)
+abline(c4[1] + c4[2], c4[3], col = 2, lty = 3)
+legend("topright", c('not display', 'display', 'grand not display', 'grand display', 'store-only not display', 'store-only display'), lty = c(1, 1, 1, 1, 3, 3), lwd=c(3, 3, 5, 5, 1, 1), col = c(1, 2, 1, 2, 1, 2))
+```
+We see that the hierarchical lines are moved toward the grand lines
