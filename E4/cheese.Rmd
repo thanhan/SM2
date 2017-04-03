@@ -20,7 +20,9 @@ cheese$lprice = log2(cheese$price)
 Look at the data
 ```{r}
 plot(mean(lvol ~ store, data = cheese), xlab = 'store index', ylab = 'mean log sale volume')
-plot(xtabs(lvol ~ store, data = cheese), xlab = 'store index', ylab = 'number of observations')
+plot(xtabs(~ store, data = cheese), xlab = 'store index', ylab = 'number of observations')
+#xtabs(~ store, data = cheese)
+
 ```
 Log sale volume vs. log price colored by stores:
 ```{r}
@@ -92,7 +94,7 @@ st = 'HOUSTON - KROGER CO'
 hk = cheese[cheese$store ==  st,]
 plot(hk$lprice, hk$lvol, col = 1 + hk$disp, xlab = 'log price', ylab = 'log sale volume', ylim = c(11, 14))
 c3 = coef(m3)$store[st,]
-abline(c3$`(Intercept)`, c3$lprice, col = 1, lwd = 1)
+abline(c3$`(Intercept)`, c3$lprice, col = 1, lwd = 3)
 abline(c3$`(Intercept)` + c3$disp , c3$lprice, col = 2, lwd = 3)
 abline(c1[1], c1[3], col = 1, lwd = 5)
 abline(c1[1] + c1[2], c1[3], col = 2, lwd = 5)

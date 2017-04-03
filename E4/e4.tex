@@ -162,7 +162,14 @@ There are several things for you to consider in analyzing this data set.
 \end{itemize}
 Propose an appropriate hierarchical model that allows you to address these issues, and use Gibbs sampling to fit your model.
 
-
+\textbf{Solution}
+\begin{enumerate}
+\item The model is:
+\begin{align*}
+\log (\mbox{vol}) = \alpha_{si} + \log (\mbox{price}) \cdot \beta_{si} + \mbox{disp}_i  \cdot \gamma_{si} + \epsilon_i 
+\end{align*}
+where \(i\) is the observation and \(si\) is the store for observation \(i\).
+\end{enumerate}
 
 \subsection{A hierarchical probit model via data augmentation}
 
