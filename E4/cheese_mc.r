@@ -124,3 +124,27 @@ for (it in 1:NMC){
   save_taub[it] = taub
   save_taug[it] = taug
 }
+
+store_names = rep("abc", m)
+for (i in 1:n){
+  j = cheese$sid[i]
+  store_names[j] = as.character(cheese$store[i])
+}
+
+disp_ad = rep(0, m)
+for (i in 1:n){
+  j = cheese$sid[i]
+  disp_ad[j] = disp_ad[j] + cheese$disp[i]
+}
+
+
+par(mfrow = c(4, 4))
+for (i in 1:16)
+  hist(save_beta[1000:2000,i], xlab = "beta", ylab = 'Freq', main = store_names[i], xlim = c(-5, 0), ylim = c(0, 400))
+
+par(mfrow = c(4, 4))
+for (i in 1:16)
+  hist(save_gamma[1000:2000,i], xlab = cat("gamma", disp_ad[i]), ylab = 'Freq', main = store_names[i], xlim = c(-1, 1), ylim = c(0, 400))
+
+par(mfrow = c(1, 1))
+hist(save_gamma[1000:2000,])
