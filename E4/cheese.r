@@ -46,4 +46,6 @@ store_slope     = coef(m2)$store$lprice
 plot(1, type = 'n', xlim = c(0, 2), ylim = c(5, 12))
 for (i in 1:88)
   abline(store_intercept[i], store_slope[i])
+
+m5 = lmer(lvol ~ (0 + 1 + lprice + disp| store), data = cheese)
   

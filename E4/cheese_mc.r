@@ -20,13 +20,13 @@ mua =  0
 mub =  0
 mug =  0
 
-tauv = 10
-taua = 10
-taub = 10
-taug = 10
+tauv = 1
+taua = 1
+taub = 1
+taug = 1
 
 # setup
-NMC = 20
+NMC = 2000
 save_alpha = matrix(nrow = NMC, ncol = m)
 save_beta  = matrix(nrow = NMC, ncol = m)
 save_gamma = matrix(nrow = NMC, ncol = m)
@@ -50,7 +50,7 @@ for (it in 1:NMC){
   for (i in 1:n){
     j = cheese$sid[i]
     sum_a[j] = sum_a[j] + tauv
-    sum_b[j] = sum_b[j] + cheese$lvol[i] - cheese$lprice[i] * beta[j] - cheese$disp[i] * gamma[j]
+    sum_b[j] = sum_b[j] + tauv * (cheese$lvol[i] - cheese$lprice[i] * beta[j] - cheese$disp[i] * gamma[j])
   }
   
   for (j in 1:m){
@@ -66,7 +66,7 @@ for (it in 1:NMC){
   for (i in 1:n){
     j = cheese$sid[i]
     sum_a[j] = sum_a[j] + tauv * cheese$lprice[i]^2
-    sum_b[j] = sum_b[j] + cheese$lvol[i] - alpha[j] - cheese$disp[i] * gamma[j]
+    sum_b[j] = sum_b[j] + tauv * cheese$lprice[i] * (cheese$lvol[i] - alpha[j] - cheese$disp[i] * gamma[j])
   }
   
   for (j in 1:m){
@@ -82,7 +82,7 @@ for (it in 1:NMC){
   for (i in 1:n){
     j = cheese$sid[i]
     sum_a[j] = sum_a[j] + tauv * cheese$disp[i]^2
-    sum_b[j] = sum_b[j] + cheese$lvol[i] - alpha[j] - cheese$lprice[i] * beta[j]
+    sum_b[j] = sum_b[j] + tauv * cheese$disp[i] * (cheese$lvol[i] - alpha[j] - cheese$lprice[i] * beta[j])
   }
   
   for (j in 1:m){
@@ -93,9 +93,12 @@ for (it in 1:NMC){
   }
   
   # sample mu
-  mua = rnorm(1, mean(alpha), sqrt(1/ (taua * m)) )
-  mub = rnorm(1, mean(beta), sqrt(1/ (taub * m)) )
-  mug = rnorm(1, mean(gamma), sqrt(1/ (taug * m)) )
+  pa = taua * m + 1
+  mua = rnorm(1, taua * m * mean(alpha) / pa, sqrt(1/ pa) )
+  pb = taub * m + 1 
+  mub = rnorm(1, taub * m * mean(beta) / pb, sqrt(1/ pb) )
+  pg = taug * m + 1
+  mug = rnorm(1, taug * m * mean(gamma) / pg, sqrt(1/ pg) )
   
   # sample tau
   taua = rgamma(1, m/2 + 1, sum((alpha - mua)^2)/2 )
