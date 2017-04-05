@@ -137,7 +137,7 @@ for (i in 1:n){
   disp_ad[j] = disp_ad[j] + cheese$disp[i]
 }
 
-
+# plot
 par(mfrow = c(4, 4))
 for (i in 1:16)
   hist(save_beta[1000:2000,i], xlab = "beta", ylab = 'Freq', main = store_names[i], xlim = c(-5, 0), ylim = c(0, 400))
@@ -148,3 +148,5 @@ for (i in 1:16)
 
 par(mfrow = c(1, 1))
 hist(save_gamma[1000:2000,])
+
+# compare to lmer
