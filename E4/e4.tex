@@ -95,6 +95,8 @@ p(\lambda)  &= \mbox{Gamma}(0.1, 0.1)
 \end{align*}
 where \(\lambda = 1 / \tau^2\).
 
+(Update: the inverse Gamma prior is not well-behaved near \(0\), this may cause problems.)
+
 To implement a Gibbs sampler, we need the conditional posterior of each variable. For \(\theta_i\), we have:
 \begin{align*}
 p(\theta_i \mid \mu, \tau, \sigma^2, y) = N(\hat{\theta_i}, 1/p_i)
@@ -166,10 +168,40 @@ Propose an appropriate hierarchical model that allows you to address these issue
 \begin{enumerate}
 \item The model is:
 \begin{align*}
-\log (\mbox{vol}) = \alpha_{si} + \log (\mbox{price}) \cdot \beta_{si} + \mbox{disp}_i  \cdot \gamma_{si} + \epsilon_i 
+\log (\mbox{vol}_i) = \alpha_{si} + \log (\mbox{price}_i) \cdot \beta_{si} + \mbox{disp}_i  \cdot \gamma_{si} + \epsilon_i 
 \end{align*}
-where \(i\) is the observation and \(si\) is the store for observation \(i\).
+where \(i\) is the observation and \(si\) is the store for observation \(i\). Letting \(V, P\) and \(D\) be the log volume, log price and display, we have:
+\begin{align*}
+V_i = \alpha_{si} + P_i \cdot \beta_{si} + D_i  \cdot \gamma_{si} + \epsilon_i 
+\end{align*}
+The priors are:
+\begin{align*}
+\alpha_{si} \sim N(\mu_a, 1/t_a)\\
+\beta_{si}  \sim N(\mu_b, 1/t_b)\\
+\gamma_{si} \sim N(\mu_g, 1/t_g)\\
+\end{align*}
+We assume flat priors on \(\mu_a, \mu_b, \mu_g\) and \(t_a, t_b, t_g\).
+Next, we derive the conditional distributions for Gibbs sampling. For \(\alpha\), we have:
+\begin{align*}
+p(\alpha_j | \ldots) &\propto \exp \left\lbrace -\frac{t}{2} \sum_{i, si = j} (\alpha_j + P_i \beta_j + D_i \gamma_j - V_i)^2 - \frac{t_a}{2} (\alpha_j - \mu_a)^2 \right\rbrace\\
+&\propto \exp -\frac{1}{2}\left\lbrace \alpha_j^2(n_j t + t_a) - 2\alpha_jt \left[\sum_{i, si = j} (V_i - P_i \beta_j - D_i \gamma_j)  + t_a \mu_a\right] \right\rbrace\\
+&\propto \exp -\frac{1}{2} \{ \alpha_j^2 A_j - 2 \alpha_j B_j \}\\
+&\propto N\left(\frac{B_j}{A_j} , \frac{1}{A_j}\right)
+\end{align*}
+Where we let \(n_j\) be the number of observation in group \(j\), and \(A_j\) and \(B_j\) be the appropriate terms in the second line.
 
+Similarly, for \(\beta\), we have:
+\begin{align*}
+p(\beta_j \mid \ldots) &\propto \exp -\frac{1}{2} \left\lbrace \beta_j^2(t \sum_i P_i^2 + t_b) - 2\beta_j \left[t\sum_i P_i(V_i - \alpha_j - D_i \gamma_j) + t_b \mu_b\right]  \right\rbrace\\
+&\propto \exp -\frac{1}{2} \{ \beta_j^2 C_j - 2 \beta_j D_j \}\\
+&\propto N\left(\frac{D_j}{C_j} , \frac{1}{C_j}\right)
+\end{align*}
+and for \(\gamma\), we have:
+\begin{align*}
+p(\gamma_j \mid \ldots) &\propto \exp -\frac{1}{2} \left\lbrace \gamma_j^2(t \sum_i P_i^2 + t_b) - 2\gamma_j \left[t\sum_i P_i(V_i - \alpha_j - P_i \beta_j) + t_g \mu_g\right]  \right\rbrace\\
+&\propto \exp -\frac{1}{2} \{ \gamma_j^2 E_j - 2 \gamma_j F_j \}\\
+&\propto N\left(\frac{F_j}{E_j} , \frac{1}{E_j}\right)
+\end{align*}
 \begin{figure}[h]
 \includegraphics[width=\textwidth]{alpha1.jpeg}
 \caption{The values of \(\alpha_1\) for all iterations, including a burn-in period in the beginning.}
