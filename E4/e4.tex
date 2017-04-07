@@ -202,6 +202,20 @@ p(\gamma_j \mid \ldots) &\propto \exp -\frac{1}{2} \left\lbrace \gamma_j^2(t \su
 &\propto \exp -\frac{1}{2} \{ \gamma_j^2 E_j - 2 \gamma_j F_j \}\\
 &\propto N\left(\frac{F_j}{E_j} , \frac{1}{E_j}\right)
 \end{align*}
+For the prior mean \(\mu_a, \mu_b\) and \(\mu_g\), we have:
+\begin{align*}
+p(\mu_a \mid \ldots) &\propto \prod_j \exp \left\lbrace -\frac{t_a}{2} (\alpha_j - \mu_a)^2 \right\rbrace\\
+&\propto N\left(\frac{\sum_j \alpha_j}{m}, (m t_a)^{-1}\right)
+\end{align*}
+(the equations for \(\mu_b\) and \(\mu_g\) are similar).
+
+For the prior precision \(t_a, t_b\) and \(t_g\), we have:
+\begin{align*}
+p(t_a \mid \ldots) &\propto t_a^{m/2} \prod_j \exp \left\lbrace - \frac{t_a}{2} (\alpha_j - \mu_a)^2 \right\rbrace\\
+&\propto \mbox{Gamma}\left(\frac{m}{2} + 1, \frac{1}{2} \sum_j (\alpha_j - \mu_a)^2\right)
+\end{align*}
+(the equations for \(t_b\) and \(t_g\) are similar).
+
 \begin{figure}[h]
 \includegraphics[width=\textwidth]{alpha1.jpeg}
 \caption{The values of \(\alpha_1\) for all iterations, including a burn-in period in the beginning.}
