@@ -150,3 +150,13 @@ par(mfrow = c(1, 1))
 hist(save_gamma[1000:2000,])
 
 # compare to lmer
+
+m1 = lmer(lvol ~ (1 + lprice + disp | store), data = train)
+
+for (sid in 1:88){
+  print(store_names[sid])
+  print(paste("LMER: ", coef(m1)$store[sid,1], coef(m1)$store[sid,2], coef(m1)$store[sid,3]))
+  print(paste("MCMC: ", mean(save_beta[1000:2000, sid]), mean(save_gamma[1000:2000, sid]), mean(save_alpha[1000:2000, sid])))
+  print("---------------------------------------------------")
+}
+  
